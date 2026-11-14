@@ -143,7 +143,8 @@ function afterSignIn(j, email) {
   saveAuth();
   tok = { t: j.idToken, exp: Date.now() + (parseInt(j.expiresIn, 10) || 3600) * 1000 - 300000 };
   profile = null; busy = false; err = ""; note = "";
-  return loadProfile().then(render);
+  stat("signin_ok");
+  return loadProfile().then(function () { render(); if (window.WureStats) window.WureStats.touch({ ses: 1 }); });
 }
 function authMsg(e) {
   var m = String((e && e.message) || "");
@@ -168,7 +169,7 @@ function doEmail(create) {
       if (create) authCall("accounts:sendOobCode", { requestType: "VERIFY_EMAIL", idToken: j.idToken }).catch(function () {});
       return afterSignIn(j, email);
     })
-    .catch(function (e) { busy = false; err = e && e.auth ? authMsg(e) : T("errNet"); render(); });
+    .catch(function (e) { busy = false; stat(create ? "signup_fail" : "signin_fail", { why: String((e && e.message) || "net").slice(0, 40) }); err = e && e.auth ? authMsg(e) : T("errNet"); render(); });
 }
 function doGoogle(idToken) {
   if (busy || !idToken) return;
@@ -199,6 +200,7 @@ function dbx(method, path, body) {
     });
   });
 }
+function stat(e, more) { if (window.WureStats) window.WureStats.ev(e, more); }
 function setupOrNet(e) { return e && (e.status === 401 || e.status === 403) ? T("errSetup") : T("errNet"); }
 
 /* ---------- Profile: the name shown to the other player ---------- */
@@ -246,7 +248,7 @@ function createGame() {
     return dbx("GET", "/wure/rooms/" + code).then(function (ex) {
       if (ex) throw new Error("again");
       return dbx("PUT", "/wure/rooms/" + code, room);
-    }).then(function () { busy = false; enter(code, 0, room); });
+    }).then(function () { busy = false; stat("room_create"); enter(code, 0, room); });
   }).catch(function (e) { busy = false; err = e && e.message === "name" ? T("errName") : setupOrNet(e); render(); });
 }
 function joinGame(raw, silent) {
@@ -275,11 +277,12 @@ function joinGame(raw, silent) {
       if (!g || g.uid !== A.uid) throw new Error("full");
       room.guest = g; return [room, 1];
     });
-  }).then(function (r) { busy = false; enter(code, r[1], r[0]); })
+  }).then(function (r) { busy = false; stat(silent ? "room_rejoin" : "room_join"); enter(code, r[1], r[0]); })
     .catch(function (e) {
       busy = false; writeJSON("wure-room", null);
       if (silent) return;
       var m = e && e.message;
+      stat("room_join_fail", { why: String(m || "net").slice(0, 20) });
       err = m === "name" ? T("errName") : m === "none" ? T("errNone") : m === "full" ? T("errFull") : m === "ended" ? T("errEnded") : setupOrNet(e);
       render();
     });
@@ -592,6 +595,8 @@ window.addEventListener("online", function () { if (O) { pollNow(); if (!O.es) o
 
 window.WureOnline = {
   sendMove: sendMove, pump: pump, leave: leave,
+  db: dbx, user: function () { return A ? { uid: A.uid } : null; }, name: function () { return (profile && profile.name) || ""; },
+  info: function () { return O ? { code: O.code, seat: O.seat, host: O.room && O.room.host && O.room.host.uid, guest: O.room && O.room.guest && O.room.guest.uid } : null; },
   relang: function () { $("chatIn").placeholder = T("chatPh"); $("chatSend").textContent = T("send"); render(); }
 };
 window.WureOnline.relang();

@@ -13,6 +13,7 @@
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <script src="config.js"></script>
+<script src="telemetry.js"></script>
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Wuré</title>
@@ -736,6 +737,7 @@ function setResult(prefix){
   else msg=t("wins")(nameOf(1),b,a);
   S.endMsg=(prefix?prefix+" ":"")+msg;
   sndWin();
+  if(window.WureStats) window.WureStats.end(S);
 }
 function finishByCount(prefix){
   S.score[0]+=sideSum(S.board,0); S.score[1]+=sideSum(S.board,1);
@@ -760,6 +762,7 @@ function scheduleCpu(){
 function newGame(){
   gameId++; busy=false; clearTimeout(cpuTimer);
   S.board=[4,4,4,4,4,4,4,4,4,4,4,4]; S.score=[0,0]; S.turn=S.first; S.over=false; S.endMsg=""; S.from=-1; S.quiet=0;
+  if(window.WureStats) window.WureStats.start(S);
   render(); scheduleCpu();
 }
 
@@ -838,6 +841,7 @@ window.WureGame={
     S.online={seat:info.seat,names:[info.names[0]||"",info.names[1]||""]}; S.mode="online";
     gameId++; busy=false; clearTimeout(cpuTimer);
     S.board=[4,4,4,4,4,4,4,4,4,4,4,4]; S.score=[0,0]; S.turn=info.first; S.over=false; S.endMsg=""; S.from=-1; S.quiet=0;
+    if(window.WureStats) window.WureStats.start(S);
     render();
   },
   setNames:function(n){ if(S.online){ S.online.names=[n[0]||"",n[1]||""]; render(); } },
@@ -845,7 +849,7 @@ window.WureGame={
     if(!S.online) return;
     S.online=null; S.mode=S.prevMode||"cpu"; shownBs=-1; newGame();
   },
-  endWith:function(msg){ if(S.over) return; S.over=true; S.endMsg=msg; busy=false; render(); sndWin(); },
+  endWith:function(msg){ if(S.over) return; S.over=true; S.endMsg=msg; busy=false; render(); sndWin(); if(window.WureStats) window.WureStats.end(S,"left"); },
   render:function(){ render(); },
   lang:function(){ return S.lang; },
   name:function(){ return (S.names[0]||"").trim(); }
@@ -877,6 +881,7 @@ function load(){
 load();
 S.turn=S.first;
 renderText(); render(); scheduleCpu();
+if(window.WureStats){ window.WureStats.start(S); window.WureStats.boot(); }
 if("serviceWorker" in navigator && location.protocol==="https:"){
   window.addEventListener("load",function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
 }

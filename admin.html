@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Dashboard · Wuré</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<meta name="author" content="Nioro Resources LLC">
+<meta name="theme-color" content="#121938">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<style>
+:root{--ink:#121938;--ink2:#4a5278;--paper:#f4f1e8;--card:#fff;--line:#e3dfd2;--gold:#f0bf00;--good:#1f8a55;--bad:#c8402a;--warn:#b97a00;--blue:#2f5fd0}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:400 15px/1.45 Figtree,"Segoe UI",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:Syne,"Trebuchet MS",Figtree,sans-serif;font-weight:800;margin:0;line-height:1.1}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.top{background:var(--ink);color:#f3f0e6;padding:14px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.top h1{font-size:1.5rem}.top h1 span{color:var(--gold)}
+.top .tag{font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#aab2da}
+.top .sp{flex:1}
+.top button{background:none;border:1.5px solid #5a6294;color:#f3f0e6;border-radius:999px;padding:6px 14px;font-weight:600}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 22px 60px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.tabs{display:flex;gap:4px;background:#e7e2d3;border-radius:12px;padding:4px;flex-wrap:wrap}
+.tabs button{border:0;background:none;border-radius:9px;padding:8px 14px;font-weight:700;color:var(--ink2)}
+.tabs button[aria-selected=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(18,25,56,.14)}
+select{background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font-weight:600}
+.sp{flex:1}
+.btn{background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:0}
+.kpi small{display:block;font-weight:700;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+.kpi b{display:block;font-family:Syne,sans-serif;font-size:1.8rem;line-height:1.15;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.8rem;color:var(--ink2)}
+.kpi.good b{color:var(--good)}.kpi.bad b{color:var(--bad)}.kpi.warn b{color:var(--warn)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:14px;min-width:0}
+.card h2{font-size:1.1rem;margin-bottom:10px}
+.card p.note{color:var(--ink2);font-size:.85rem;margin:8px 0 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2)}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+td.wrapc{white-space:normal;text-align:left;color:var(--ink2);font-size:.85rem}
+.scroll{overflow-x:auto}
+.pill{display:inline-block;border-radius:999px;padding:2px 9px;font-weight:700;font-size:.75rem}
+.pill.good{background:#dff3e8;color:var(--good)}.pill.bad{background:#fbe3dd;color:var(--bad)}.pill.warn{background:#fff0cc;color:var(--warn)}.pill.info{background:#e4eaf9;color:var(--blue)}
+.legend{display:flex;gap:14px;font-size:.8rem;color:var(--ink2);margin-top:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+svg text{font:600 10px Figtree,sans-serif;fill:var(--ink2)}
+.sign{max-width:400px;margin:8vh auto 0;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px}
+.sign h2{font-size:1.4rem;margin-bottom:6px}
+.err{color:var(--bad);font-weight:600;margin:10px 0 0}
+textarea{width:100%;font:12px/1.4 ui-monospace,Menlo,monospace;border:1.5px solid var(--line);border-radius:10px;padding:10px;background:#fbfaf5;color:var(--ink)}
+footer{color:var(--ink2);font-size:.8rem;margin-top:26px}
+[hidden]{display:none!important}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.wrap{padding:14px 12px 50px}.top{padding:12px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Wur<span>é</span></h1><span class="tag">Dashboard</span><span class="sp"></span>
+  <span id="when" class="tag"></span>
+  <button type="button" id="refresh" hidden>Refresh</button>
+  <button type="button" id="signout" hidden>Sign out</button>
+</header>
+<main class="wrap" id="main"></main>
+<script src="config.js"></script>
+<script>
+(function(){
+"use strict";
+var CFG=window.WURE_CONFIG||{},DB=String(CFG.databaseURL||"").replace(/\/+$/,""),KEY=String(CFG.apiKey||"");
+var AUTH_URL="https://identitytoolkit.googleapis.com/v1",TOKEN_URL="https://securetoken.googleapis.com/v1";
+var GOOGLE_CLIENT_ID=String(CFG.googleClientId||""),OWNER_EMAIL="abdoul.samb@gmail.com",ROOT="/wure";
+var $=function(id){return document.getElementById(id)},main=$("main");
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function fmt(n){return Number(n||0).toLocaleString("en-US")}
+function num(x){return typeof x==="number"&&x>0&&x<1e13?x:0}
+function pct(a,b){return b?Math.round(a*100/b)+" %":"–"}
+function dur(sec){sec=Math.round(sec||0);if(sec<60)return sec+" s";if(sec<3600)return Math.round(sec/60)+" min";var h=Math.floor(sec/3600),m=Math.round((sec-h*3600)/60);if(m===60){h++;m=0}return h+" h "+("0"+m).slice(-2)}
+function ago(t){if(!t)return "–";var s=(Date.now()-t)/1000;if(s<120)return "now";if(s<3600)return Math.round(s/60)+" min ago";if(s<86400)return Math.round(s/3600)+" h ago";if(s<86400*45)return Math.round(s/86400)+" d ago";return new Date(t).toISOString().slice(0,10)}
+function dayOf(t){return new Date(t).toISOString().slice(0,10)}
+function dayAgo(n){return dayOf(Date.now()-n*86400000)}
+function stamp(t){var d=new Date(t);return d.toISOString().slice(5,10)+" "+d.toISOString().slice(11,16)}
+var CN={"221":"🇸🇳 Senegal","1":"🇺🇸 USA / Canada","33":"🇫🇷 France","39":"🇮🇹 Italy","other":"🌍 Other"};
+var SPN={"planet-auto-hub":"Planet Auto Hub","nioro-farms":"Nioro Farms","jollof-ventures":"Jollof Ventures"};
+function flag(cc){return (CN[cc]||CN.other).split(" ")[0]}
+
+// ---------- sign-in: the owner account, shared with the Ludo Teranga dashboard (same site, same storage) ----------
+var own=null,tok=null;
+try{own=JSON.parse(localStorage.getItem("ludo-own-auth")||"null")}catch(e){}
+if(!own||!own.rt||!own.key)own=null;
+function saveOwn(){try{if(own)localStorage.setItem("ludo-own-auth",JSON.stringify(own));else localStorage.removeItem("ludo-own-auth")}catch(e){}}
+function signInGoogle(idToken){
+  return fetch(AUTH_URL+"/accounts:signInWithIdp?key="+encodeURIComponent(KEY),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({postBody:"id_token="+encodeURIComponent(idToken)+"&providerId=google.com",requestUri:String(window.location.href),returnSecureToken:true})})
+    .then(function(r){return r.json().then(function(j){
+      if(!r.ok||!j.idToken){var m=String((j&&j.error&&j.error.message)||"");throw new Error(/OPERATION_NOT_ALLOWED/.test(m)?"Google sign-in is not switched on in Firebase yet.":/UNAUTHORIZED_DOMAIN|idp-response-failed/i.test(m)?"This site is not on Firebase's authorized domains list yet.":"Google sign-in failed. Try again.")}
+      if(String(j.email||"").toLowerCase()!==OWNER_EMAIL){tok=null;own=null;saveOwn();throw new Error("This Google account is not the owner account.")}
+      own={key:KEY,rt:j.refreshToken,uid:j.localId};saveOwn();tok={t:j.idToken,exp:Date.now()+(parseInt(j.expiresIn,10)||3600)*1000-60000};
+    })});
+}
+function token(){
+  if(!own)return Promise.reject(new Error("signin"));
+  if(tok&&tok.exp>Date.now())return Promise.resolve(tok.t);
+  return fetch(TOKEN_URL+"/token?key="+encodeURIComponent(own.key),{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"grant_type=refresh_token&refresh_token="+encodeURIComponent(own.rt)})
+    .then(function(r){return r.json().then(function(j){
+      if(!r.ok||!j.id_token){if(r.status===400||r.status===401||r.status===403){own=null;tok=null;saveOwn();throw new Error("signin")}throw new Error("net")}
+      own.rt=j.refresh_token||own.rt;own.uid=j.user_id||own.uid;saveOwn();tok={t:j.id_token,exp:Date.now()+(parseInt(j.expires_in,10)||3600)*1000-60000};return tok.t;
+    })});
+}
+function get(path,q){
+  return token().then(function(t){return fetch(DB+ROOT+path+".json?"+(q?q+"&":"")+"auth="+encodeURIComponent(t))}).then(function(r){if(!r.ok){var e=new Error("net");e.status=r.status;throw e}return r.json()});
+}
+function del(path){return token().then(function(t){return fetch(DB+ROOT+path+".json?auth="+encodeURIComponent(t),{method:"DELETE"})}).catch(function(){})}
+// The new parts of the Wuré rules. They go INSIDE the existing "wure" node; nothing else in the database changes.
+function rulesText(){
+  var o=String(own&&own.uid||"").replace(/[^A-Za-z0-9]/g,""),me="auth != null && auth.uid === '"+o+"'";
+  return '// 1) In "wure" > "rooms", add this one line next to "$code" (lets only you list the rooms):\n'+
+  '".read": "'+me+'",\n\n'+
+  '// 2) In "wure", add these three nodes next to "rooms" and "profiles":\n'+
+  '"history": {\n  ".read": "'+me+'",\n  "$code": {\n    ".write": "!data.exists()",\n    ".validate": "$code.matches(/^[A-Z0-9]{6}$/) && newData.hasChildren([\'t\',\'s\'])"\n  }\n},\n'+
+  '"events": {\n  ".read": "'+me+'",\n  "$d": {\n    ".write": "'+me+' && !newData.exists()",\n    "$k": {\n      ".write": "!data.exists()",\n      ".validate": "$d.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.hasChildren([\'e\',\'t\']) && newData.child(\'e\').isString() && newData.child(\'e\').val().length <= 24"\n    }\n  }\n},\n'+
+  '"seen": {\n  ".read": "'+me+'",\n  "$u": {\n    ".read": "auth != null && auth.uid === $u",\n    ".write": "auth != null && auth.uid === $u"\n  }\n}\n';
+}
+
+// ---------- data ----------
+var EV=[],SEEN={},ROOMS={},HIST={},denied={},loadedAt=0,loadErr="";
+var F={range:7,cc:"",pf:"",b:""},tab="overview";
+function load(){
+  loadErr="";denied={};
+  var from=dayAgo(89);
+  function guard(k,p){return p.catch(function(e){if(e.status===401||e.status===403)denied[k]=1;else throw e})}
+  var a=guard("events",get("/events",'orderBy=%22%24key%22&startAt=%22'+from+'%22').then(function(d){
+    EV=[];Object.keys(d||{}).forEach(function(day){var rows=d[day]||{};Object.keys(rows).forEach(function(k){var r=rows[k];if(r&&typeof r==="object"&&typeof r.e==="string")EV.push({e:r.e,t:num(r.t),day:day,d:String(r.d||""),u:String(r.u||""),cc:CN[r.cc]?String(r.cc):"other",pf:r.pf==="app"?"app":"web",b:String(r.b||""),l:String(r.l||""),dv:/^(phone|tablet|desktop)$/.test(r.dv)?r.dv:"unknown",gm:String(r.gm||""),lv:String(r.lv||""),r:String(r.r||""),min:Number(r.min)||0,sc:String(r.sc||""),sp:String(r.sp||""),why:String(r.why||""),m:String(r.m||""),w:String(r.w||"")})})});
+    EV.sort(function(x,y){return x.t-y.t});
+  }));
+  var b=guard("seen",get("/seen").then(function(d){SEEN=d||{}}));
+  var c=guard("rooms",get("/rooms").then(function(r){ROOMS=r||{}}));
+  var h=guard("history",get("/history").then(function(r){HIST=r||{}}));
+  return Promise.all([a,b,c,h]).then(function(){loadedAt=Date.now();prune()});
+}
+// Detailed events and finished-game records are kept 90 days.
+function prune(){
+  var cut=dayAgo(90);
+  if(!denied.events)get("/events","shallow=true").then(function(k){Object.keys(k||{}).filter(function(d){return /^\d{4}-\d\d-\d\d$/.test(d)&&d<cut}).forEach(function(d){del("/events/"+d)})}).catch(function(){});
+  if(!denied.history)Object.keys(HIST||{}).forEach(function(code){var h=HIST[code];if(h&&num(h.t)&&num(h.t)<Date.parse(cut+"T00:00:00Z")){delete HIST[code];del("/history/"+code)}});
+}
+function fromDay(){return dayAgo(F.range-1)}
+function evs(){var f=fromDay();return EV.filter(function(x){return x.day>=f&&(!F.cc||x.cc===F.cc)&&(!F.pf||x.pf===F.pf)&&(!F.b||x.b===F.b)})}
+function of(list,e){return list.filter(function(x){return x.e===e})}
+function uniq(list){var s={};list.forEach(function(x){s[x.u||x.d]=1});return Object.keys(s).length}
+function dayList(){var n=Math.max(F.range,7),a=[];for(var i=n-1;i>=0;i--)a.push(dayAgo(i));return a}
+function perDay(list,days){return days.map(function(d){return list.filter(function(x){return x.day===d}).length})}
+function bars(days,series,h){
+  h=h||150;var W=Math.max(days.length*26,300),max=1;
+  days.forEach(function(d,i){var s=0;series.forEach(function(se){s+=se.v[i]||0});if(s>max)max=s});
+  var bw=W/days.length,o='<div class="scroll"><svg viewBox="0 0 '+W+' '+(h+26)+'" width="100%" style="min-width:'+Math.min(W,620)+'px;max-height:'+(h+60)+'px" role="img" aria-label="Daily chart">';
+  o+='<line x1="0" y1="'+h+'" x2="'+W+'" y2="'+h+'" stroke="#e3dfd2"/><text x="2" y="10">'+fmt(max)+'</text>';
+  days.forEach(function(d,i){
+    var y=h,x=i*bw+bw*0.18,w=bw*0.64;
+    series.forEach(function(se){var v=se.v[i]||0,bh=v/max*(h-16);if(v){y-=bh;o+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="2" fill="'+se.c+'"><title>'+d+' · '+se.n+': '+fmt(v)+'</title></rect>'}});
+    if(days.length<=10||i%Math.ceil(days.length/10)===0||i===days.length-1)o+='<text x="'+(i*bw+bw/2).toFixed(1)+'" y="'+(h+16)+'" text-anchor="middle">'+d.slice(5)+'</text>';
+  });
+  o+='</svg></div><div class="legend">'+series.map(function(se){return '<span><i style="background:'+se.c+'"></i>'+se.n+'</span>'}).join("")+'</div>';
+  return o;
+}
+function kpi(l,v,sub,cls){return '<div class="kpi '+(cls||"")+'"><small>'+l+'</small><b>'+v+'</b>'+(sub?'<span>'+sub+'</span>':"")+'</div>'}
+function rangeWord(){return F.range===1?"today":"last "+F.range+" days"}
+function table(head,rows,empty){
+  if(!rows.length)return '<p class="note">'+(empty||"Nothing yet.")+'</p>';
+  return '<div class="scroll"><table><thead><tr>'+head.map(function(h){return '<th>'+h+'</th>'}).join("")+'</tr></thead><tbody>'+rows.map(function(r){return '<tr>'+r.map(function(c,i){return i?'<td>'+c+'</td>':'<th scope="row">'+c+'</th>'}).join("")+'</tr>'}).join("")+'</tbody></table></div>';
+}
+function byCountry(list){var m={};list.forEach(function(x){(m[x.cc]=m[x.cc]||[]).push(x)});return Object.keys(CN).filter(function(c){return m[c]}).map(function(c){return [c,m[c]]})}
+
+// ---------- views ----------
+function notice(){
+  var w=[denied.events?"the event log":"",denied.seen?"player activity":"",denied.rooms?"the list of live games":"",denied.history?"finished online games":""].filter(Boolean);
+  if(!w.length)return "";
+  return '<div class="card" style="border-color:var(--bad)"><h2>One step in Firebase</h2><p style="margin:0 0 10px">The database does not yet let this account read '+w.join(", ")+'. Open Firebase &gt; Realtime Database &gt; Rules, and add the lines below inside the existing <b>wure</b> node (keep everything else), then publish. The game keeps working in the meantime.</p><textarea id="rules" rows="22" readonly>'+esc(rulesText())+'</textarea><p style="margin:8px 0 0"><button type="button" class="btn" id="copy">Copy</button> <span id="copied" style="color:var(--good);font-weight:600"></span></p></div>';
+}
+function vOverview(){
+  var L=evs(),days=dayList(),opens=of(L,"app_open"),st=of(L,"game_start"),en=of(L,"game_end"),on=st.filter(function(x){return x.gm==="online"});
+  var h='<div class="grid">'+kpi("App opens",fmt(opens.length),rangeWord())+kpi("Devices",fmt(uniq(opens)),"unique, "+rangeWord())+kpi("Games started",fmt(st.length),pct(en.length,st.length)+" finished")+kpi("Online games",fmt(on.length),fmt(of(L,"room_create").length)+" rooms created")+'</div>';
+  h+='<div class="card"><h2>Per day</h2>'+bars(days,[{n:"App opens",c:"#2f5fd0",v:perDay(opens,days)},{n:"Games started",c:"#f0bf00",v:perDay(st,days)}])+'</div>';
+  var rows=byCountry(opens).map(function(p){var cc=p[0],o=p[1];return [CN[cc],fmt(o.length),fmt(uniq(o)),fmt(st.filter(function(x){return x.cc===cc}).length)]});
+  var dv={};opens.forEach(function(x){dv[x.dv]=(dv[x.dv]||0)+1});
+  var rows2=Object.keys(dv).sort(function(a,b){return dv[b]-dv[a]}).map(function(k){return [k,fmt(dv[k]),pct(dv[k],opens.length)]});
+  var lg={};opens.forEach(function(x){var k=x.l||"?";lg[k]=(lg[k]||0)+1});
+  var rows3=Object.keys(lg).sort(function(a,b){return lg[b]-lg[a]}).map(function(k){return [({en:"English",fr:"Français",it:"Italiano"})[k]||k,fmt(lg[k]),pct(lg[k],opens.length)]});
+  h+='<div class="two"><div class="card"><h2>By country</h2>'+table(["Country","Opens","Devices","Games"],rows)+'</div><div class="card"><h2>Device</h2>'+table(["Type","Opens","Share"],rows2)+'<h2 style="margin-top:16px">Language</h2>'+table(["Language","Opens","Share"],rows3)+'</div></div>';
+  return h;
+}
+function vGames(){
+  var L=evs(),st=of(L,"game_start"),en=of(L,"game_end"),lf=of(L,"game_left"),days=dayList();
+  var h='<div class="grid">'+kpi("Started",fmt(st.length),rangeWord())+kpi("Finished",fmt(en.length),pct(en.length,st.length))+kpi("Left early",fmt(lf.length),"more than 15 s in")+kpi("Average length",en.length?dur(en.reduce(function(a,x){return a+x.min*60},0)/en.length):"–","finished games")+'</div>';
+  h+='<div class="card"><h2>Games per day</h2>'+bars(days,[{n:"Started",c:"#f0bf00",v:perDay(st,days)},{n:"Finished",c:"#1f8a55",v:perDay(en,days)}])+'</div>';
+  var modes=[["cpu","Against the computer"],["two","Two players, one phone"],["online","Online"]];
+  var rows=modes.map(function(m){var s=st.filter(function(x){return x.gm===m[0]}),e=en.filter(function(x){return x.gm===m[0]});return [m[1],fmt(s.length),fmt(e.length),pct(e.length,s.length),e.length?dur(e.reduce(function(a,x){return a+x.min*60},0)/e.length):"–"]});
+  h+='<div class="card"><h2>By mode</h2>'+table(["Mode","Started","Finished","Completion","Avg length"],rows)+'</div>';
+  var rows2=["easy","medium","hard"].map(function(lv){var e=en.filter(function(x){return x.gm==="cpu"&&x.lv===lv}),w=e.filter(function(x){return x.r==="w"}).length,d=e.filter(function(x){return x.r==="d"}).length;return [lv,fmt(of(st,"game_start").filter(function(x){return x.gm==="cpu"&&x.lv===lv}).length),fmt(e.length),fmt(w),fmt(d),fmt(e.length-w-d),pct(w,e.length)]});
+  h+='<div class="card"><h2>Against the computer, by level</h2>'+table(["Level","Started","Finished","Player won","Draw","Computer won","Player win rate"],rows2)+'<p class="note">A win rate far above 50 % on hard means the computer is too easy; far below 25 % on easy means it is too hard.</p></div>';
+  return h;
+}
+function vOnline(){
+  var L=evs(),h='<div class="grid">'+kpi("Rooms created",fmt(of(L,"room_create").length),rangeWord())+kpi("Joined",fmt(of(L,"room_join").length),fmt(of(L,"room_rejoin").length)+" rejoined")+kpi("Join failures",fmt(of(L,"room_join_fail").length),"bad code, full or ended",of(L,"room_join_fail").length?"warn":"")+kpi("Sign-ins",fmt(of(L,"signin_ok").length),fmt(of(L,"signin_fail").length+of(L,"signup_fail").length)+" failed",of(L,"signin_fail").length+of(L,"signup_fail").length?"warn":"")+'</div>';
+  var live=Object.keys(ROOMS||{}).map(function(c){return [c,ROOMS[c]]}).filter(function(p){var r=p[1];return r&&r.host&&!r.over&&num(r.t)>Date.now()-6*3600000});
+  var rows=live.map(function(p){var r=p[1];return [p[0],r.guest?'<span class="pill good">playing</span>':'<span class="pill info">waiting</span>',esc(r.host.name||"?"),esc(r.guest?r.guest.name||"?":"–"),ago(num(r.t))]});
+  h+='<div class="card"><h2>Rooms open now</h2>'+(denied.rooms?'<p class="note">Needs the Firebase rule below.</p>':table(["Code","State","Host","Guest","Created"],rows,"No open rooms."))+'<p class="note">Finished rooms are deleted by the players, so this list is only games in progress or waiting (last 6 hours).</p></div>';
+  var hs=Object.keys(HIST||{}).map(function(c){return [c,HIST[c]]}).filter(function(p){return p[1]&&num(p[1].t)>=Date.parse(fromDay()+"T00:00:00Z")}).sort(function(a,b){return num(b[1].t)-num(a[1].t)}).slice(0,40);
+  function nm(u){var s=SEEN[u];return s&&s.n?esc(s.n):(u?u.slice(0,6)+"…":"?")}
+  h+='<div class="card"><h2>Finished online games</h2>'+(denied.history?'<p class="note">Needs the Firebase rule below.</p>':table(["Code","When","Host","Guest","Score","Length"],hs.map(function(p){var g=p[1],s=g.s||[0,0],u=g.u||[];return [p[0],stamp(num(g.t)),nm(u[0]),nm(u[1]),s[0]+" – "+s[1],dur((g.min||0)*60)]}),"No finished online games in this period."))+'<p class="note">Names appear only for players who have signed in and played; otherwise a short account code.</p></div>';
+  return h;
+}
+function vSponsors(){
+  var L=of(evs(),"sp_view"),days=dayList(),cols=["#2f5fd0","#f0bf00","#1f8a55"],keys=Object.keys(SPN);
+  var rows=keys.map(function(k){var v=L.filter(function(x){return x.sp===k});return [SPN[k],fmt(v.length),fmt(uniq(v)),fmt(uniq(v.filter(function(x){return x.cc==="221"}))),fmt(uniq(v.filter(function(x){return x.cc==="33"||x.cc==="39"}))),fmt(uniq(v.filter(function(x){return x.cc==="1"})))]});
+  var h='<div class="grid">'+keys.map(function(k){return kpi(SPN[k],fmt(uniq(L.filter(function(x){return x.sp===k}))),"devices reached, "+rangeWord())}).concat([kpi("Impressions",fmt(L.length),"all sponsors")]).join("")+'</div>';
+  h+='<div class="card"><h2>Impressions per day</h2>'+bars(days,keys.map(function(k,i){return {n:SPN[k],c:cols[i],v:perDay(L.filter(function(x){return x.sp===k}),days)}}))+'</div>';
+  h+='<div class="card"><h2>Reach by sponsor</h2>'+table(["Sponsor","Impressions","Devices","Senegal","France / Italy","USA / Canada"],rows)+'<p class="note">One impression is counted each time the game opens with the sponsor tiles on screen. The tiles are not links yet, so there are no clicks to report.</p></div>';
+  return h;
+}
+function vPlayers(){
+  var f=Date.parse(fromDay()+"T00:00:00Z"),ps=Object.keys(SEEN||{}).map(function(u){var o=SEEN[u]||{};return {u:u,n:String(o.n||"").slice(0,20)||"(no name)",cc:CN[o.cc]?o.cc:"other",pf:o.pf==="app"?"app":"web",b:String(o.b||""),first:num(o.first),last:num(o.last),ses:o.ses||0,g:o.g||0,w:o.w||0}}).filter(function(o){return o.last>=f}).sort(function(a,b){return b.last-a.last});
+  var h='<div class="grid">'+kpi("Signed-in players",fmt(Object.keys(SEEN||{}).length),"all time")+kpi("Active",fmt(ps.length),rangeWord())+kpi("New",fmt(ps.filter(function(o){return o.first>=f}).length),rangeWord())+kpi("Games played",fmt(ps.reduce(function(a,o){return a+o.g},0)),"by these players")+'</div>';
+  h+='<div class="card"><h2>Players</h2>'+(denied.seen?'<p class="note">Needs the Firebase rule below.</p>':table(["Player","Country","Last seen","Sessions","Games","Wins","Joined","Platform"],ps.map(function(o){return [esc(o.n),flag(o.cc)+" "+(CN[o.cc]||"").split(" ").slice(1).join(" "),ago(o.last),fmt(o.ses),fmt(o.g),fmt(o.w),o.first?dayOf(o.first).slice(5):"–",o.pf+(o.b?" v"+esc(o.b):"")]}),"No signed-in players active in this period."))+'<p class="note">Only players who signed in for online play appear here. Players who just play on their phone are counted anonymously in Overview.</p></div>';
+  return h;
+}
+var LABEL={signin_ok:"Signed in",signin_fail:"Sign-in failed",signup_fail:"Create login failed",room_create:"Room created",room_join:"Joined a room",room_join_fail:"Join failed",room_rejoin:"Rejoined a room",game_left:"Left a game",js_error:"Error"};
+function vErrors(){
+  var L=evs().filter(function(x){return /fail|error|left/.test(x.e)}).slice(-120).reverse();
+  var n=of(evs(),"js_error").length,h='<div class="grid">'+kpi("Errors",fmt(n),rangeWord(),n?"bad":"good")+kpi("Sign-in failures",fmt(of(evs(),"signin_fail").length+of(evs(),"signup_fail").length),rangeWord())+kpi("Join failures",fmt(of(evs(),"room_join_fail").length),rangeWord())+kpi("Left early",fmt(of(evs(),"game_left").length),rangeWord())+'</div>';
+  h+='<div class="card"><h2>Latest</h2>'+table(["Time","What","Detail","Country","Build"],L.map(function(x){var cls=/js_error|fail/.test(x.e)?"bad":"warn";return [stamp(x.t),'<span class="pill '+cls+'">'+esc(LABEL[x.e]||x.e)+'</span>',esc((x.m?x.m+" ("+x.w+")":x.why||x.gm||"")).slice(0,120),flag(x.cc),esc(x.b||"")]}),"No errors in this period.")+'</div>';
+  return h;
+}
+function builds(){var b={};EV.forEach(function(x){if(x.b)b[x.b]=1});return Object.keys(b).sort(function(a,c){return c-a})}
+function render(){
+  if(!own){renderSign("");return}
+  $("signout").hidden=false;$("refresh").hidden=false;$("when").textContent=loadedAt?"Updated "+new Date(loadedAt).toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"}):"";
+  var T=[["overview","Overview"],["games","Games"],["online","Online play"],["players","Players"],["sponsors","Sponsors"],["errors","Errors"]];
+  var h='<div class="bar"><div class="tabs" role="tablist">'+T.map(function(t){return '<button type="button" role="tab" data-tab="'+t[0]+'" aria-selected="'+(tab===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><span class="sp"></span>'+
+    '<select id="f-range" aria-label="Period">'+[[1,"Today"],[7,"Last 7 days"],[30,"Last 30 days"],[90,"Last 90 days"]].map(function(r){return '<option value="'+r[0]+'"'+(F.range===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select>'+
+    '<select id="f-cc" aria-label="Country"><option value="">All countries</option>'+Object.keys(CN).map(function(c){return '<option value="'+c+'"'+(F.cc===c?" selected":"")+'>'+CN[c]+'</option>'}).join("")+'</select>'+
+    '<select id="f-pf" aria-label="Web or app"><option value="">Web and app</option><option value="web"'+(F.pf==="web"?" selected":"")+'>Web</option><option value="app"'+(F.pf==="app"?" selected":"")+'>App</option></select>'+
+    '<select id="f-b" aria-label="Build"><option value="">All builds</option>'+builds().map(function(b){return '<option value="'+esc(b)+'"'+(F.b===b?" selected":"")+'>v'+esc(b)+'</option>'}).join("")+'</select>'+
+    '<button type="button" class="btn" id="csv">Export '+(tab==="players"?"players":"events")+' CSV</button></div>';
+  if(loadErr)h+='<div class="card" style="margin-top:0;border-color:var(--bad)"><p class="err" style="margin:0">'+esc(loadErr)+'</p></div>';
+  h+=notice();
+  h+=tab==="games"?vGames():tab==="online"?vOnline():tab==="players"?vPlayers():tab==="sponsors"?vSponsors():tab==="errors"?vErrors():vOverview();
+  h+='<footer>Days follow universal time (UTC). Detailed events are kept 90 days. No email address, password or player name is stored in the event log. &copy; 2026 Nioro Resources LLC</footer>';
+  main.innerHTML=h;
+  Array.prototype.forEach.call(main.querySelectorAll("[data-tab]"),function(b){b.addEventListener("click",function(){tab=b.getAttribute("data-tab");render()})});
+  $("f-range").addEventListener("change",function(){F.range=parseInt(this.value,10)||7;render()});
+  $("f-cc").addEventListener("change",function(){F.cc=this.value;render()});
+  $("f-pf").addEventListener("change",function(){F.pf=this.value;render()});
+  $("f-b").addEventListener("change",function(){F.b=this.value;render()});
+  $("csv").addEventListener("click",csv);
+  if($("copy"))$("copy").addEventListener("click",function(){var t=$("rules");t.select();try{navigator.clipboard.writeText(t.value).then(function(){$("copied").textContent="Copied."},function(){document.execCommand("copy");$("copied").textContent="Copied."})}catch(e){try{document.execCommand("copy");$("copied").textContent="Copied."}catch(x){}}});
+}
+function csv(){
+  var rows,name="events";
+  if(tab==="players"){
+    name="players";rows=[["player","country","platform","build","first_seen_utc","last_seen_utc","sessions","games","wins"]];
+    Object.keys(SEEN||{}).forEach(function(u){var o=SEEN[u]||{};rows.push([o.n||"",o.cc||"",o.pf||"",o.b||"",o.first?new Date(o.first).toISOString():"",o.last?new Date(o.last).toISOString():"",o.ses||0,o.g||0,o.w||0])});
+  }else{
+    rows=[["time_utc","event","game_mode","level","result","minutes","score","sponsor","country","platform","build","device_type","language","detail"]];
+    evs().forEach(function(x){rows.push([new Date(x.t).toISOString(),x.e,x.gm,x.lv,x.r,x.min||"",x.sc,x.sp,x.cc,x.pf,x.b,x.dv,x.l,x.m||x.why])});
+  }
+  var txt=rows.map(function(r){return r.map(function(c){c=String(c==null?"":c);if(/^[=+\-@]/.test(c))c="'"+c;return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(",")}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv"}));a.download="wure-"+name+"-"+dayAgo(0)+".csv";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+}
+function renderSign(msg){
+  $("signout").hidden=true;$("refresh").hidden=true;$("when").textContent="";
+  if(!DB||!KEY){main.innerHTML='<div class="sign"><h2>Not set up</h2><p style="margin:0">This copy of the game has no database or sign-in key in config.js.</p></div>';return}
+  main.innerHTML='<div class="sign"><h2>Owner sign-in</h2><p style="margin:0 0 14px;color:var(--ink2)">Use the owner\'s Google account. The database lets only that account read these numbers.</p><div id="gbtn"></div>'+(msg?'<p class="err" role="alert">'+esc(msg)+'</p>':"")+'</div>';
+  mountGoogleButton();
+}
+function mountGoogleButton(){
+  var el=$("gbtn");if(!el)return;
+  var tries=0;
+  (function tick(){
+    if(window.google&&window.google.accounts&&window.google.accounts.id){
+      google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:onGoogleCredential});
+      google.accounts.id.renderButton(el,{theme:"outline",size:"large",text:"signin_with",width:280});
+      return;
+    }
+    if(++tries>40){el.innerHTML='<p class="err" role="alert">Could not load Google sign-in. Check your connection and reload.</p>';return}
+    setTimeout(tick,150);
+  })();
+}
+window.onGoogleCredential=function(resp){
+  var el=$("gbtn");if(el)el.innerHTML='<p style="color:var(--ink2);margin:0">Signing in…</p>';
+  signInGoogle(resp&&resp.credential).then(start,function(er){renderSign(er.message||"Sign-in failed.")});
+};
+function start(){
+  main.innerHTML='<p style="color:var(--ink2)">Loading…</p>';
+  load().then(render,function(e){
+    if(e&&e.message==="signin"){renderSign("Please sign in again.");return}
+    loadErr="Could not reach the game server. Check your connection and tap Refresh.";loadedAt=0;render();
+  });
+  armPoll();
+}
+// Re-load every 5 minutes while the tab is open and visible.
+var POLL_MS=300000,pollT=null;
+function armPoll(){clearInterval(pollT);pollT=setInterval(function(){if(own&&!document.hidden)start()},POLL_MS)}
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&own&&loadedAt&&Date.now()-loadedAt>=POLL_MS)start()});
+$("signout").addEventListener("click",function(){own=null;tok=null;saveOwn();EV=[];SEEN={};ROOMS={};HIST={};clearInterval(pollT);renderSign("")});
+$("refresh").addEventListener("click",start);
+if(own)start();else renderSign("");
+})();
+</script>
+</body>
+</html>
