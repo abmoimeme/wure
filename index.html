@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
+<script src="config.js"></script>
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Wuré</title>
@@ -201,6 +202,26 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
 .row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
 .rules{padding-left:20px;margin:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:15px}
 .rules b{color:var(--gold)}
+/* Online play */
+.chat{display:flex;flex-direction:column;gap:6px}
+.chat[hidden]{display:none}
+.chat .msgs{min-height:20px;max-height:92px;overflow:auto;font-size:14px;display:flex;flex-direction:column;gap:2px}
+.chat .msgs div{overflow-wrap:anywhere}
+.chat .msgs b{color:var(--gold);font-weight:700}
+.chat .emojis{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.chat .emojis button{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:12px;font-size:22px;line-height:1;padding:6px 10px}
+.chat .emojis button:active{background:rgba(255,255,255,.18)}
+.chatform{display:flex;gap:8px}
+.chatform input{flex:1;min-width:0;font:inherit;color:var(--ink);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:9px 12px}
+.codebig{font-family:var(--display);font-weight:800;font-size:44px;letter-spacing:.18em;text-align:center;color:var(--gold);margin:6px 0 4px;-webkit-user-select:text;user-select:text}
+.note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.err{font-size:14px;color:var(--danger);margin:8px 0 0}
+.stack{display:flex;flex-direction:column;gap:10px}
+.fld{font:inherit;color:var(--ink);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 12px;width:100%}
+.cta[disabled],.ghost[disabled]{opacity:.5}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em}
+.or::before,.or::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.15)}
+.linkbtn{background:none;border:0;padding:0;color:var(--gold);text-decoration:underline;font-size:13px}
 /* Tablets, portrait: a larger board and bigger touch targets */
 @media (min-width:700px){
   .app{max-width:760px;gap:16px}
@@ -217,14 +238,14 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
   .app{max-width:1100px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);column-gap:28px;row-gap:14px;align-content:start}
   header,footer{grid-column:1 / -1}
   .board{grid-column:1;grid-row:2 / span 4;align-self:start}
-  #p1,#p0,.status,.sponsors{grid-column:2}
+  #p1,#p0,.status,.chat,.sponsors{grid-column:2}
 }
 @media (max-height:520px) and (orientation:landscape){
   .app{max-width:none;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);column-gap:16px;row-gap:8px;align-content:start}
   header,footer{grid-column:1 / -1}
   .mark{font-size:22px}
   .board{grid-column:1;grid-row:2 / span 4;align-self:start;padding:14px 10px;row-gap:22px}
-  #p1,#p0,.status,.sponsors{grid-column:2}
+  #p1,#p0,.status,.chat,.sponsors{grid-column:2}
   .player{padding:6px 12px}
   .sponsors .tile{height:40px}
   footer{display:none}
@@ -239,6 +260,7 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
   <header>
     <h1 class="mark">WUR<span>É</span></h1>
     <div class="tools">
+      <button class="tool" id="btnOnline" type="button"></button>
       <button class="tool" id="btnNew" type="button"></button>
       <button class="tool" id="btnRules" type="button"></button>
       <button class="tool" id="btnLang" type="button"></button>
@@ -261,6 +283,15 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
   </section>
 
   <div class="status" id="status" aria-live="polite"></div>
+
+  <section class="chat" id="chat" hidden aria-label="Chat">
+    <div class="msgs" id="chatMsgs" aria-live="polite"></div>
+    <div class="emojis" id="chatEmojis"></div>
+    <form class="chatform" id="chatForm" autocomplete="off">
+      <input type="text" id="chatIn" maxlength="40" autocomplete="off" autocapitalize="sentences">
+      <button class="tool" type="submit" id="chatSend"></button>
+    </form>
+  </section>
 
   <section class="sponsors" aria-labelledby="spLab">
     <div class="lab" id="spLab"></div>
@@ -314,6 +345,12 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
   </div>
 </dialog>
 
+<dialog id="dlgOnline">
+  <h2 id="onTitle"></h2>
+  <div id="onBody"></div>
+  <div class="row"><button type="button" class="ghost" id="onClose"></button></div>
+</dialog>
+
 <dialog id="dlgRules">
   <h2 id="rulesTitle"></h2>
   <ol class="rules" id="rulesList"></ol>
@@ -327,7 +364,7 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
 /* ---------- Text ---------- */
 var T = {
   en:{
-    sponsors:"Sponsored by", newGame:"New game", rules:"Rules", lang:"Français", sound:"Sound",
+    sponsors:"Sponsored by", online:"Play online", backMenu:"Back to menu", notYourTurn:"Wait for your turn.", newGame:"New game", rules:"Rules", lang:"Français", sound:"Sound",
     computer:"Computer", player1:"Player 1", player2:"Player 2",
     yourRowBottom:"Bottom row", yourRowTop:"Top row",
     toPlay:function(n){return n+" to play. Tap a pit on your row.";},
@@ -358,7 +395,7 @@ var T = {
     ]
   },
   fr:{
-    sponsors:"Avec le soutien de", newGame:"Nouvelle partie", rules:"Règles", lang:"Italiano", sound:"Son",
+    sponsors:"Avec le soutien de", online:"Jouer en ligne", backMenu:"Retour au menu", notYourTurn:"Attendez votre tour.", newGame:"Nouvelle partie", rules:"Règles", lang:"Italiano", sound:"Son",
     computer:"Ordinateur", player1:"Joueur 1", player2:"Joueur 2",
     yourRowBottom:"Rangée du bas", yourRowTop:"Rangée du haut",
     toPlay:function(n){return "À "+n+" de jouer. Touchez une case de votre rangée.";},
@@ -389,7 +426,7 @@ var T = {
     ]
   },
   it:{
-    sponsors:"Con il sostegno di", newGame:"Nuova partita", rules:"Regole", lang:"English", sound:"Suono",
+    sponsors:"Con il sostegno di", online:"Gioca online", backMenu:"Torna al menu", notYourTurn:"Aspetta il tuo turno.", newGame:"Nuova partita", rules:"Regole", lang:"English", sound:"Suono",
     computer:"Computer", player1:"Giocatore 1", player2:"Giocatore 2",
     yourRowBottom:"Fila in basso", yourRowTop:"Fila in alto",
     toPlay:function(n){return "Tocca a "+n+". Tocca una buca della tua fila.";},
@@ -424,11 +461,12 @@ var T = {
 /* ---------- State ---------- */
 var S = {
   board:[4,4,4,4,4,4,4,4,4,4,4,4], score:[0,0], turn:0, over:false, endMsg:"",
-  mode:"cpu", level:"medium", names:["",""], lang:"en", sound:true, from:-1, first:0
+  mode:"cpu", level:"medium", names:["",""], lang:"en", sound:true, from:-1, first:0, online:null, prevMode:"cpu"
 };
 var busy=false, cpuTimer=null, gameId=0;
 function t(k){return T[S.lang][k];}
 function nameOf(p){
+  if(S.online){ var on=String(S.online.names[p]||"").trim(); if(on) return on; }
   if(p===1 && S.mode==="cpu") return t("computer");
   var n=(S.names[p]||"").trim();
   return n || (p===0 ? t("player1") : t("player2"));
@@ -545,19 +583,31 @@ function drawPit(i){
   el.classList.toggle("zero",n===0);
   el.setAttribute("aria-label",(side(i)===0?nameOf(0):nameOf(1))+", "+n);
 }
-function humanTurn(){ return !S.over && !busy && !(S.mode==="cpu" && S.turn===1); }
+function bottomSeat(){ return S.online ? S.online.seat : 0; }
+function humanTurn(){ return !S.over && !busy && !(S.mode==="cpu" && S.turn===1) && !(S.online && S.turn!==S.online.seat); }
+var shownBs=-1;
+function layoutBoard(){
+  var bs=bottomSeat(); if(bs===shownBs) return; shownBs=bs;
+  var ord = bs===0 ? [11,10,9,8,7,6,0,1,2,3,4,5] : [5,4,3,2,1,0,6,7,8,9,10,11];
+  ord.forEach(function(i){ boardEl.appendChild(pits[i]); });
+}
 function render(){
+  layoutBoard();
+  var bs=bottomSeat();
   var legal = humanTurn() ? legalMoves(S.board,S.turn) : [];
   for(var i=0;i<12;i++){
     drawPit(i);
+    pits[i].classList.toggle("bottom",side(i)===bs);
+    pits[i].classList.toggle("top",side(i)!==bs);
     pits[i].classList.toggle("legal",legal.indexOf(i)>=0);
     pits[i].classList.toggle("from",i===S.from);
   }
-  for(var p=0;p<2;p++){
-    var el=document.getElementById("p"+p);
+  for(var k=0;k<2;k++){
+    var p = k===0 ? bs : 1-bs;
+    var el=document.getElementById("p"+k);
     el.classList.toggle("active",!S.over && S.turn===p);
     el.querySelector(".name").textContent=nameOf(p);
-    el.querySelector(".sub").textContent= p===0 ? t("yourRowBottom") : t("yourRowTop");
+    el.querySelector(".sub").textContent= k===0 ? t("yourRowBottom") : t("yourRowTop");
     el.querySelector(".n").textContent=S.score[p];
     el.querySelector(".bar i").style.width=Math.min(100,S.score[p]*4)+"%";
   }
@@ -568,8 +618,8 @@ function renderStatus(hand){
   function txt(s){ var d=document.createElement("span"); d.textContent=s; st.appendChild(d); }
   if(S.over){
     txt(S.endMsg);
-    var b=document.createElement("button"); b.className="cta"; b.type="button"; b.textContent=t("again");
-    b.addEventListener("click",function(){ newGame(); }); st.appendChild(b);
+    var b=document.createElement("button"); b.className="cta"; b.type="button"; b.textContent= S.online ? t("backMenu") : t("again");
+    b.addEventListener("click",function(){ if(S.online && window.WureOnline) window.WureOnline.leave(); else newGame(); }); st.appendChild(b);
     return;
   }
   if(typeof hand==="number"){
@@ -578,8 +628,9 @@ function renderStatus(hand){
     return;
   }
   if(S.mode==="cpu" && S.turn===1){ txt(t("thinking")(nameOf(1))); return; }
+  if(S.online && S.turn!==S.online.seat){ txt(t("thinking")(nameOf(S.turn))); return; }
   txt(t("toPlay")(nameOf(S.turn)));
-  if(!busy && sideSum(S.board,0)+sideSum(S.board,1)<=6){
+  if(!S.online && !busy && sideSum(S.board,0)+sideSum(S.board,1)<=6){
     var e=document.createElement("button"); e.className="ghost"; e.type="button"; e.textContent=t("endCount");
     e.addEventListener("click",function(){ finishByCount(t("endCountDone")); render(); }); st.appendChild(e);
   }
@@ -587,6 +638,7 @@ function renderStatus(hand){
 function renderText(){
   document.documentElement.lang=S.lang;
   document.getElementById("btnNew").textContent=t("newGame");
+  document.getElementById("btnOnline").textContent=t("online");
   document.getElementById("spLab").textContent=t("sponsors");
   document.getElementById("btnRules").textContent=t("rules");
   document.getElementById("btnLang").textContent=t("lang");
@@ -621,9 +673,11 @@ function onPit(i){
   if(S.over || busy) return;
   if(S.mode==="cpu" && S.turn===1) return;
   audio();
+  if(S.online && S.turn!==S.online.seat){ toast(t("notYourTurn")); sndNo(); return; }
   if(side(i)!==S.turn){ toast(t("notYours")); sndNo(); return; }
   if(S.board[i]===0){ toast(t("emptyPit")); sndNo(); return; }
   if(legalMoves(S.board,S.turn).indexOf(i)<0){ toast(t("mustFeed")); sndNo(); return; }
+  if(S.online && window.WureOnline && !window.WureOnline.sendMove(i)) return;
   playMove(i);
 }
 async function playMove(i){
@@ -655,6 +709,7 @@ async function playMove(i){
   busy=false;
   checkEnd();
   render();
+  if(S.online && window.WureOnline) window.WureOnline.pump();
   if(!S.over) scheduleCpu();
 }
 function setResult(prefix){
@@ -715,7 +770,7 @@ function openDialog(d){ try{ d.showModal(); }catch(e){ d.setAttribute("open","")
 function closeDialog(d){ try{ d.close(); }catch(e){ d.removeAttribute("open"); } }
 
 document.getElementById("btnNew").addEventListener("click",function(){
-  draft={mode:S.mode,level:S.level,first:String(S.first)};
+  draft={mode:(S.online?S.prevMode:S.mode),level:S.level,first:String(S.first)};
   document.getElementById("inName0").value=S.names[0]||"";
   document.getElementById("inName1").value=S.names[1]||"";
   paintAll(); openDialog(dlgNew);
@@ -725,7 +780,9 @@ document.getElementById("newStart").addEventListener("click",function(){
   S.mode=draft.mode; S.level=draft.level; S.first=Number(draft.first);
   S.names[0]=document.getElementById("inName0").value.trim();
   S.names[1]=document.getElementById("inName1").value.trim();
-  save(); closeDialog(dlgNew); audio(); newGame();
+  save(); closeDialog(dlgNew); audio();
+  if(S.online && window.WureOnline){ window.WureOnline.leave(true); }
+  newGame();
 });
 document.getElementById("btnRules").addEventListener("click",function(){ openDialog(dlgRules); });
 document.getElementById("rulesClose").addEventListener("click",function(){ closeDialog(dlgRules); });
@@ -734,11 +791,46 @@ document.getElementById("btnLang").addEventListener("click",function(){
   save();
   if(S.over){ var keep=S.score.slice(); S.over=false; S.score=keep; setResultQuiet(); }
   renderText(); render();
+  if(window.WureOnline) window.WureOnline.relang();
 });
 function setResultQuiet(){ var s=S.sound; S.sound=false; setResult(""); S.sound=s; }
 document.getElementById("btnSound").addEventListener("click",function(){
   S.sound=!S.sound; save(); renderText(); if(S.sound){ audio(); sndDrop(); }
 });
+
+
+/* ---------- Hooks for online play (online.js) ---------- */
+window.WureGame={
+  S:S, t:t, toast:toast, audio:audio, side:side, legalMoves:legalMoves,
+  isBusy:function(){ return busy; },
+  remoteMove:function(i){
+    if(S.over||busy||!S.online) return false;
+    if(side(i)!==S.turn || S.board[i]<=0 || legalMoves(S.board,S.turn).indexOf(i)<0) return false;
+    playMove(i); return true;
+  },
+  silentMove:function(i){
+    if(S.over||S.board[i]<=0) return false;
+    var p=S.turn, sim=simulate(S.board,p,i);
+    S.board=sim.board; S.score[p]+=sim.captured; S.turn=1-p; S.from=-1;
+    checkEnd(); return true;
+  },
+  startOnline:function(info){
+    if(!S.online) S.prevMode=S.mode;
+    S.online={seat:info.seat,names:[info.names[0]||"",info.names[1]||""]}; S.mode="online";
+    gameId++; busy=false; clearTimeout(cpuTimer);
+    S.board=[4,4,4,4,4,4,4,4,4,4,4,4]; S.score=[0,0]; S.turn=info.first; S.over=false; S.endMsg=""; S.from=-1;
+    render();
+  },
+  setNames:function(n){ if(S.online){ S.online.names=[n[0]||"",n[1]||""]; render(); } },
+  stopOnline:function(){
+    if(!S.online) return;
+    S.online=null; S.mode=S.prevMode||"cpu"; shownBs=-1; newGame();
+  },
+  endWith:function(msg){ if(S.over) return; S.over=true; S.endMsg=msg; busy=false; render(); sndWin(); },
+  render:function(){ render(); },
+  lang:function(){ return S.lang; },
+  name:function(){ return (S.names[0]||"").trim(); }
+};
 
 /* ---------- Saved settings (names, language, sound) ---------- */
 var KEY="wure.settings.v1";
@@ -771,5 +863,6 @@ if("serviceWorker" in navigator && location.protocol==="https:"){
 }
 })();
 </script>
+<script src="online.js"></script>
 </body>
 </html>
