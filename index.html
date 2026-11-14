@@ -2,7 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Wuré, the Senegalese seed-sowing board game. Play against the computer or with a friend.">
+<meta name="theme-color" content="#141d3a">
+<meta name="application-name" content="Wuré">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wuré">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Wuré</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,10 +39,11 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overscroll-behavior-y:none;touch-action:manipulation;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
 body{
   background:
-    radial-gradient(circle at 12% 8%, rgba(255,255,255,.05) 0 2px, transparent 3px 26px, rgba(255,255,255,.035) 27px 28px, transparent 29px),
-    radial-gradient(circle at 88% 94%, rgba(255,255,255,.05) 0 2px, transparent 3px 34px, rgba(255,255,255,.035) 35px 36px, transparent 37px),
     linear-gradient(170deg,var(--cloth-2),var(--cloth) 55%);
   background-color:var(--cloth);
   color:var(--ink);
@@ -44,7 +56,7 @@ body{
   min-height:100%;
   max-width:620px;
   margin:0 auto;
-  padding:14px 16px 18px;
+  padding:calc(14px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
   display:flex;
   flex-direction:column;
   gap:12px;
@@ -189,6 +201,34 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
 .row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
 .rules{padding-left:20px;margin:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:15px}
 .rules b{color:var(--gold)}
+/* Tablets, portrait: a larger board and bigger touch targets */
+@media (min-width:700px){
+  .app{max-width:760px;gap:16px}
+  .mark{font-size:36px}
+  .tool{padding:9px 16px;font-size:15px}
+  .player .name{font-size:20px}
+  .granary .num{font-size:36px}
+  .count{font-size:15px;min-width:28px}
+  .status{font-size:18px}
+  .sponsors .tile{height:70px}
+}
+/* Tablets and phones turned sideways: board on the left, game info on the right */
+@media (min-width:820px) and (orientation:landscape){
+  .app{max-width:1100px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);column-gap:28px;row-gap:14px;align-content:start}
+  header,footer{grid-column:1 / -1}
+  .board{grid-column:1;grid-row:2 / span 4;align-self:start}
+  #p1,#p0,.status,.sponsors{grid-column:2}
+}
+@media (max-height:520px) and (orientation:landscape){
+  .app{max-width:none;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);column-gap:16px;row-gap:8px;align-content:start}
+  header,footer{grid-column:1 / -1}
+  .mark{font-size:22px}
+  .board{grid-column:1;grid-row:2 / span 4;align-self:start;padding:14px 10px;row-gap:22px}
+  #p1,#p0,.status,.sponsors{grid-column:2}
+  .player{padding:6px 12px}
+  .sponsors .tile{height:40px}
+  footer{display:none}
+}
 @media (prefers-reduced-motion:reduce){
   *{animation:none !important;transition:none !important}
 }
@@ -288,7 +328,7 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
 var T = {
   en:{
     sponsors:"Sponsored by", newGame:"New game", rules:"Rules", lang:"Français", sound:"Sound",
-    computer:"Computer", player2:"Player 2",
+    computer:"Computer", player1:"Player 1", player2:"Player 2",
     yourRowBottom:"Bottom row", yourRowTop:"Top row",
     toPlay:function(n){return n+" to play. Tap a pit on your row.";},
     thinking:function(n){return n+" is thinking…";},
@@ -311,15 +351,15 @@ var T = {
     rulesTitle:"How to play Wuré",
     rulesList:[
       "<b>The board.</b> 12 pits, 6 on each side, with 4 seeds in every pit. Your pits are the row in front of you.",
-      "<b>Sowing.</b> On your turn, pick up all the seeds from one of your pits and drop them one by one in the next pits, going counter-clockwise. With 12 seeds or more you go all the way round and skip the pit you started from.",
-      "<b>Capturing.</b> If your last seed lands in a pit on the other side and makes it 2 or 3, you take those seeds. Then look at the pit just before it: if it is also on the other side with 2 or 3, take it too, and keep going back.",
+      "<b>Sowing.</b> On your turn, pick up all the seeds from one of your non-empty pits and drop them one by one in the next pits, going counter-clockwise. With 12 seeds or more you go all the way round, skipping the starting pit on every lap.",
+      "<b>Capturing.</b> If your last seed lands in a pit on the other side and makes it 2 or 3, you take those seeds. Then look at the pit just before it: if it is also on the other side with 2 or 3, take it too. Keep going back this way, and stop when you reach your own side or a pit that doesn't contain 2 or 3 seeds.",
       "<b>Feed your opponent.</b> If the other side is empty, you must play a move that gives it seeds. A move that would capture every seed on the other side captures nothing.",
-      "<b>Winning.</b> The first player with 25 seeds wins. 24 each is a draw. If nobody can feed the other side, each player keeps the seeds left on their row."
+      "<b>Winning.</b> The first player to capture 25 seeds wins. 24 each is a draw. If the other side is empty and you cannot give it any seeds, the game ends. Each player adds the seeds left on their row to their score."
     ]
   },
   fr:{
-    sponsors:"Avec le soutien de", newGame:"Nouvelle partie", rules:"Règles", lang:"English", sound:"Son",
-    computer:"Ordinateur", player2:"Joueur 2",
+    sponsors:"Avec le soutien de", newGame:"Nouvelle partie", rules:"Règles", lang:"Italiano", sound:"Son",
+    computer:"Ordinateur", player1:"Joueur 1", player2:"Joueur 2",
     yourRowBottom:"Rangée du bas", yourRowTop:"Rangée du haut",
     toPlay:function(n){return "À "+n+" de jouer. Touchez une case de votre rangée.";},
     thinking:function(n){return n+" réfléchit…";},
@@ -342,10 +382,41 @@ var T = {
     rulesTitle:"Comment jouer au Wuré",
     rulesList:[
       "<b>Le plateau.</b> 12 cases, 6 par camp, avec 4 graines dans chaque case. Vos cases sont la rangée devant vous.",
-      "<b>Semer.</b> À votre tour, prenez toutes les graines d'une de vos cases et déposez-les une par une dans les cases suivantes, dans le sens inverse des aiguilles d'une montre. Avec 12 graines ou plus, vous faites le tour complet en sautant la case de départ.",
-      "<b>Capturer.</b> Si votre dernière graine tombe dans une case adverse qui contient alors 2 ou 3 graines, vous les prenez. Regardez ensuite la case précédente : si elle est aussi dans le camp adverse avec 2 ou 3 graines, prenez-la aussi, et ainsi de suite.",
+      "<b>Semer.</b> À votre tour, prenez toutes les graines d'une de vos cases non vides et déposez-les une par une dans les cases suivantes, dans le sens inverse des aiguilles d'une montre. Avec 12 graines ou plus, vous faites le tour complet en sautant la case de départ à chaque tour.",
+      "<b>Capturer.</b> Si votre dernière graine tombe dans une case adverse qui contient alors 2 ou 3 graines, vous les prenez. Regardez ensuite la case précédente : si elle est aussi dans le camp adverse avec 2 ou 3 graines, prenez-la aussi. Continuez à reculer ainsi, et arrêtez-vous quand vous atteignez votre propre camp ou une case qui ne contient pas 2 ou 3 graines.",
       "<b>Nourrir l'adversaire.</b> Si le camp adverse est vide, vous devez jouer un coup qui lui donne des graines. Un coup qui prendrait toutes les graines adverses ne capture rien.",
-      "<b>Gagner.</b> Le premier joueur à 25 graines gagne. 24 partout, c'est match nul. Si personne ne peut nourrir l'autre camp, chacun garde les graines de sa rangée."
+      "<b>Gagner.</b> Le premier joueur à capturer 25 graines gagne. 24 partout, c'est match nul. Si le camp adverse est vide et que vous ne pouvez pas lui donner de graines, la partie se termine. Chaque joueur ajoute à son score les graines restantes sur sa rangée."
+    ]
+  },
+  it:{
+    sponsors:"Con il sostegno di", newGame:"Nuova partita", rules:"Regole", lang:"English", sound:"Suono",
+    computer:"Computer", player1:"Giocatore 1", player2:"Giocatore 2",
+    yourRowBottom:"Fila in basso", yourRowTop:"Fila in alto",
+    toPlay:function(n){return "Tocca a "+n+". Tocca una buca della tua fila.";},
+    thinking:function(n){return n+" sta pensando…";},
+    sowing:function(n){return n+" semina";},
+    inHand:function(n){return n+" in mano";},
+    emptyPit:"Questa buca è vuota.",
+    notYours:"Questa buca è dall'altra parte.",
+    mustFeed:"L'avversario non ha più semi. Devi giocare una buca che gliene dia.",
+    slam:"Questa mossa prenderebbe tutti i semi dell'altra parte, quindi non si cattura nulla.",
+    took:function(n,c){return n+" cattura "+c+".";},
+    wins:function(n,a,b){return n+" vince "+a+" a "+b+".";},
+    draw:"Pareggio, 24 a testa.",
+    noFeed:"Nessuna mossa può dare semi all'altra parte. Ognuno tiene i semi della propria fila.",
+    again:"Gioca ancora", endCount:"Fermati e conta",
+    endCountDone:"Partita fermata. Ognuno tiene i semi della propria fila.",
+    setup:"Nuova partita", mode:"Partita", vsCpu:"Contro il computer", two:"Due giocatori, un telefono",
+    name0:"Giocatore 1 (fila in basso)", name1:"Giocatore 2 (fila in alto)",
+    level:"Livello del computer", easy:"Facile", medium:"Medio", hard:"Difficile",
+    first:"Chi inizia", cancel:"Annulla", start:"Inizia", close:"Capito",
+    rulesTitle:"Come si gioca a Wuré",
+    rulesList:[
+      "<b>Il tavolo.</b> 12 buche, 6 per lato, con 4 semi in ogni buca. Le tue buche sono la fila davanti a te.",
+      "<b>Seminare.</b> Al tuo turno prendi tutti i semi di una delle tue buche non vuote e li lasci uno a uno nelle buche successive, in senso antiorario. Con 12 semi o più fai il giro completo, saltando la buca di partenza a ogni giro.",
+      "<b>Catturare.</b> Se il tuo ultimo seme cade in una buca dell'altra parte e la porta a 2 o 3 semi, li prendi. Poi guarda la buca precedente: se è anch'essa dell'altra parte con 2 o 3 semi, prendila. Continua a ritroso così, e fermati quando arrivi alla tua parte o a una buca che non contiene 2 o 3 semi.",
+      "<b>Dare da mangiare.</b> Se l'altra parte è vuota, devi giocare una mossa che le dia dei semi. Una mossa che prenderebbe tutti i semi avversari non cattura nulla.",
+      "<b>Vincere.</b> Il primo giocatore a catturare 25 semi vince. 24 a testa è pareggio. Se l'altra parte è vuota e non puoi darle nessun seme, la partita finisce. Ogni giocatore aggiunge al proprio punteggio i semi rimasti sulla propria fila."
     ]
   }
 };
@@ -353,14 +424,14 @@ var T = {
 /* ---------- State ---------- */
 var S = {
   board:[4,4,4,4,4,4,4,4,4,4,4,4], score:[0,0], turn:0, over:false, endMsg:"",
-  mode:"cpu", level:"medium", names:["AB",""], lang:"en", sound:true, from:-1, first:0
+  mode:"cpu", level:"medium", names:["",""], lang:"en", sound:true, from:-1, first:0
 };
-var busy=false, cpuTimer=null, gameId=0, stable=null;
+var busy=false, cpuTimer=null, gameId=0;
 function t(k){return T[S.lang][k];}
 function nameOf(p){
   if(p===1 && S.mode==="cpu") return t("computer");
   var n=(S.names[p]||"").trim();
-  return n || (p===0 ? (S.lang==="fr"?"Joueur 1":"Player 1") : t("player2"));
+  return n || (p===0 ? t("player1") : t("player2"));
 }
 
 /* ---------- Rules engine ---------- */
@@ -490,7 +561,6 @@ function render(){
     el.querySelector(".n").textContent=S.score[p];
     el.querySelector(".bar i").style.width=Math.min(100,S.score[p]*4)+"%";
   }
-  if(!busy){ try{ stable=JSON.parse(JSON.stringify(S)); }catch(e){} }
   renderStatus();
 }
 function renderStatus(hand){
@@ -655,33 +725,50 @@ document.getElementById("newStart").addEventListener("click",function(){
   S.mode=draft.mode; S.level=draft.level; S.first=Number(draft.first);
   S.names[0]=document.getElementById("inName0").value.trim();
   S.names[1]=document.getElementById("inName1").value.trim();
-  closeDialog(dlgNew); audio(); newGame();
+  save(); closeDialog(dlgNew); audio(); newGame();
 });
 document.getElementById("btnRules").addEventListener("click",function(){ openDialog(dlgRules); });
 document.getElementById("rulesClose").addEventListener("click",function(){ closeDialog(dlgRules); });
 document.getElementById("btnLang").addEventListener("click",function(){
-  S.lang = S.lang==="en" ? "fr" : "en";
+  S.lang = S.lang==="en" ? "fr" : (S.lang==="fr" ? "it" : "en");
+  save();
   if(S.over){ var keep=S.score.slice(); S.over=false; S.score=keep; setResultQuiet(); }
   renderText(); render();
 });
 function setResultQuiet(){ var s=S.sound; S.sound=false; setResult(""); S.sound=s; }
 document.getElementById("btnSound").addEventListener("click",function(){
-  S.sound=!S.sound; renderText(); if(S.sound){ audio(); sndDrop(); }
+  S.sound=!S.sound; save(); renderText(); if(S.sound){ audio(); sndDrop(); }
 });
 
-/* ---------- Boot (keeps the game across page updates) ---------- */
-function start(saved){
-  if(saved && saved.board && saved.board.length===12){
-    for(var k in saved) if(Object.prototype.hasOwnProperty.call(S,k)) S[k]=saved[k];
-  }
-  renderText(); render(); scheduleCpu();
+/* ---------- Saved settings (names, language, sound) ---------- */
+var KEY="wure.settings.v1";
+function save(){
+  try{ localStorage.setItem(KEY,JSON.stringify({names:S.names,lang:S.lang,sound:S.sound,mode:S.mode,level:S.level,first:S.first})); }catch(e){}
 }
-try{
-  var hot = window.claude && window.claude.hot;
-  if(hot && hot.snapshot) hot.snapshot(function(){ return stable; });
-  if(hot && hot.ready) hot.ready(function(d){ start(d||{}); });
-  else start((hot && hot.data) || {});
-}catch(e){ start({}); }
+function load(){
+  var d=null;
+  try{ d=JSON.parse(localStorage.getItem(KEY)||"null"); }catch(e){}
+  if(d && typeof d==="object"){
+    if(Array.isArray(d.names)) S.names=[String(d.names[0]||"").slice(0,16),String(d.names[1]||"").slice(0,16)];
+    if(d.lang==="en"||d.lang==="fr"||d.lang==="it") S.lang=d.lang;
+    if(typeof d.sound==="boolean") S.sound=d.sound;
+    if(d.mode==="cpu"||d.mode==="two") S.mode=d.mode;
+    if(d.level==="easy"||d.level==="medium"||d.level==="hard") S.level=d.level;
+    if(d.first===0||d.first===1) S.first=d.first;
+  } else {
+    var nl=(navigator.language||"en").slice(0,2).toLowerCase();
+    S.lang = nl==="fr" ? "fr" : (nl==="it" ? "it" : "en");
+    S.names=["",""];
+  }
+}
+
+/* ---------- Boot ---------- */
+load();
+S.turn=S.first;
+renderText(); render(); scheduleCpu();
+if("serviceWorker" in navigator && location.protocol==="https:"){
+  window.addEventListener("load",function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+}
 })();
 </script>
 </body>
