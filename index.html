@@ -275,6 +275,7 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
       <button class="tool" id="btnOnline" type="button"></button>
       <button class="tool" id="btnNew" type="button"></button>
       <button class="tool" id="btnRules" type="button"></button>
+      <button class="tool" id="btnGuide" type="button"></button>
       <button class="tool" id="btnLang" type="button"></button>
       <button class="tool" id="btnSound" type="button" aria-pressed="true"></button>
     </div>
@@ -398,7 +399,7 @@ var T = {
     name0:"Player 1 (bottom row)", name1:"Player 2 (top row)",
     level:"Computer level", easy:"Easy", medium:"Medium", hard:"Hard",
     first:"Who plays first", cancel:"Cancel", start:"Start", close:"Got it",
-    rulesTitle:"How to play Wuré", guide:"Read the full guide",
+    rulesTitle:"How to play Wuré", guide:"Read the full guide", guideBtn:"Guide",
     rulesList:[
       "<b>The board.</b> 12 pits, 6 on each side, with 4 seeds in every pit. Your pits are the row in front of you.",
       "<b>Sowing.</b> On your turn, pick up all the seeds from one of your non-empty pits and drop them one by one in the next pits, going counter-clockwise. With 12 seeds or more you go all the way round, skipping the starting pit on every lap.",
@@ -429,7 +430,7 @@ var T = {
     name0:"Joueur 1 (rangée du bas)", name1:"Joueur 2 (rangée du haut)",
     level:"Niveau de l'ordinateur", easy:"Facile", medium:"Moyen", hard:"Difficile",
     first:"Qui commence", cancel:"Annuler", start:"Commencer", close:"Compris",
-    rulesTitle:"Comment jouer au Wuré", guide:"Lire le guide complet",
+    rulesTitle:"Comment jouer au Wuré", guide:"Lire le guide complet", guideBtn:"Guide",
     rulesList:[
       "<b>Le plateau.</b> 12 cases, 6 par camp, avec 4 graines dans chaque case. Vos cases sont la rangée devant vous.",
       "<b>Semer.</b> À votre tour, prenez toutes les graines d'une de vos cases non vides et déposez-les une par une dans les cases suivantes, dans le sens inverse des aiguilles d'une montre. Avec 12 graines ou plus, vous faites le tour complet en sautant la case de départ à chaque tour.",
@@ -460,7 +461,7 @@ var T = {
     name0:"Giocatore 1 (fila in basso)", name1:"Giocatore 2 (fila in alto)",
     level:"Livello del computer", easy:"Facile", medium:"Medio", hard:"Difficile",
     first:"Chi inizia", cancel:"Annulla", start:"Inizia", close:"Capito",
-    rulesTitle:"Come si gioca a Wuré", guide:"Leggi la guida completa",
+    rulesTitle:"Come si gioca a Wuré", guide:"Leggi la guida completa", guideBtn:"Guida",
     rulesList:[
       "<b>Il tavolo.</b> 12 buche, 6 per lato, con 4 semi in ogni buca. Le tue buche sono la fila davanti a te.",
       "<b>Seminare.</b> Al tuo turno prendi tutti i semi di una delle tue buche non vuote e li lasci uno a uno nelle buche successive, in senso antiorario. Con 12 semi o più fai il giro completo, saltando la buca di partenza a ogni giro.",
@@ -654,6 +655,7 @@ function renderText(){
   document.getElementById("btnOnline").textContent=t("online");
   document.getElementById("spLab").textContent=t("sponsors");
   document.getElementById("btnRules").textContent=t("rules");
+  document.getElementById("btnGuide").textContent=t("guideBtn");
   document.getElementById("btnLang").textContent=t("lang");
   var bs=document.getElementById("btnSound"); bs.textContent=t("sound"); bs.setAttribute("aria-pressed",S.sound?"true":"false");
   document.getElementById("newTitle").textContent=t("setup");
@@ -805,6 +807,10 @@ document.getElementById("newStart").addEventListener("click",function(){
   newGame();
 });
 document.getElementById("btnRules").addEventListener("click",function(){ openDialog(dlgRules); });
+document.getElementById("btnGuide").addEventListener("click",function(){
+  var gu=(window.WURE_CONFIG&&window.WURE_CONFIG.guideUrl)||{};
+  location.href=gu[S.lang]||gu.fr||"guide.html?lang="+S.lang;
+});
 document.getElementById("rulesClose").addEventListener("click",function(){ closeDialog(dlgRules); });
 document.getElementById("btnLang").addEventListener("click",function(){
   S.lang = S.lang==="en" ? "fr" : (S.lang==="fr" ? "it" : "en");
