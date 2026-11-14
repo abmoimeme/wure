@@ -247,7 +247,16 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
   .board{grid-column:1;grid-row:2 / span 4;align-self:start;padding:14px 10px;row-gap:22px}
   #p1,#p0,.status,.chat,.sponsors{grid-column:2}
   .player{padding:6px 12px}
-  .sponsors .tile{height:40px}
+  .sponsors .tile{height:36px}
+  .sponsors{gap:4px}
+  .sponsors .lbl,.sponsors>:first-child:not(.tile){font-size:10px}
+  .status{font-size:15px;line-height:1.25;min-height:0}
+  .chat{gap:4px}
+  .chat .msgs{max-height:26px;font-size:13px}
+  .app{padding-top:8px;padding-bottom:8px}
+  .chat .emojis{flex-wrap:nowrap;gap:4px}
+  .chat .emojis button{font-size:17px;padding:3px 0;flex:1;border-radius:10px}
+  #chatForm input,#chatForm button{padding-top:6px;padding-bottom:6px}
   footer{display:none}
 }
 @media (prefers-reduced-motion:reduce){
