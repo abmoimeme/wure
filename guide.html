@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wuré · Guide</title>
+<meta name="theme-color" content="#141d3a">
+<meta name="author" content="Nioro Resources LLC">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cloth:#141d3a;--cloth2:#1d2a52;--ink:#f4ecdb;--muted:#a8b0cc;
+  --gold:#f3c333;--teal:#2ec4b6;--coral:#ff7a59;--violet:#9b7bff;--green:#58d68d;
+  --wood:#b0703d;--wood2:#6b3d1e;--pit:#3d2110;--seed:#e8e2cf;
+  --display:"Syne","Trebuchet MS",sans-serif;--body:"Figtree","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(170deg,var(--cloth2),var(--cloth) 40%) fixed;background-color:var(--cloth);color:var(--ink);font:400 16px/1.55 var(--body)}
+a{color:var(--gold)}
+.wrap{max-width:780px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+.nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.nav .back{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#1a1405;font-weight:700;text-decoration:none;border-radius:999px;padding:9px 16px}
+.nav .sp{flex:1}
+.langs{display:flex;gap:4px;background:rgba(255,255,255,.08);border-radius:999px;padding:3px}
+.langs button{border:0;background:none;color:var(--muted);font:700 .85rem var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.langs button[aria-pressed=true]{background:var(--ink);color:var(--cloth)}
+.hero{text-align:center;padding:26px 8px 18px}
+.hero h1{font:800 clamp(2.6rem,10vw,4.2rem)/1 var(--display);margin:0;background:linear-gradient(90deg,var(--gold),var(--coral) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);margin:10px auto 0;max-width:34em;font-size:1.05rem}
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.chip{border-radius:999px;padding:6px 14px;font-weight:700;font-size:.85rem;color:#10142a}
+.chip:nth-child(1){background:var(--gold)}.chip:nth-child(2){background:var(--teal)}.chip:nth-child(3){background:var(--coral)}.chip:nth-child(4){background:var(--violet)}
+.toc{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.toc a{flex:none;text-decoration:none;color:var(--ink);background:rgba(255,255,255,.08);border-radius:999px;padding:7px 14px;font-weight:600;font-size:.9rem}
+section{margin-top:18px;border-radius:22px;padding:20px 18px 22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-top:6px solid var(--c)}
+section h2{display:flex;align-items:center;gap:12px;font:800 1.5rem/1.15 var(--display);margin:0 0 10px}
+section h2 .n{flex:none;width:38px;height:38px;border-radius:50%;background:var(--c);color:#10142a;display:grid;place-items:center;font-size:1.1rem}
+section p{margin:10px 0}
+.s1{--c:var(--gold)}.s2{--c:var(--teal)}.s3{--c:var(--coral)}.s4{--c:var(--violet)}.s5{--c:var(--green)}.s6{--c:var(--gold)}.s7{--c:var(--teal)}
+.fig{margin:14px 0 6px;background:rgba(10,14,34,.55);border-radius:16px;padding:10px 8px 8px}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{color:var(--muted);font-size:.9rem;text-align:center;padding:6px 8px 4px}
+.call{border-left:5px solid var(--c);background:rgba(255,255,255,.07);border-radius:0 14px 14px 0;padding:10px 14px;margin:12px 0}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.card{border-radius:16px;padding:14px 12px;text-align:center;color:#10142a}
+.card b{display:block;font:800 2rem/1.1 var(--display)}
+.card span{font-weight:600;font-size:.9rem}
+.card.a{background:var(--green)}.card.b{background:var(--gold)}.card.c{background:var(--coral)}
+.vals{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.vals i{font:800 1.6rem var(--display);font-style:normal;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:var(--coral);color:#10142a;box-shadow:0 4px 0 #b4472c}
+ul.tips{list-style:none;padding:0;margin:8px 0}
+ul.tips li{position:relative;padding:8px 10px 8px 40px;margin:8px 0;background:rgba(255,255,255,.06);border-radius:12px}
+ul.tips li::before{content:"★";position:absolute;left:12px;top:8px;color:var(--c)}
+.cta{display:block;text-align:center;margin:26px auto 0;background:linear-gradient(90deg,var(--gold),var(--coral));color:#1a1405;font:800 1.15rem var(--display);text-decoration:none;border-radius:999px;padding:15px 24px;max-width:340px}
+.spons{margin-top:26px;text-align:center;color:var(--muted);font-size:.85rem}
+.spons div{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.spons img{height:44px;width:auto;background:#fff;border-radius:10px;padding:5px 9px}
+footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:18px}
+@media(max-width:520px){.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav">
+    <a class="back" id="back" href="index.html">←</a>
+    <span class="sp"></span>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-l="fr">FR</button><button type="button" data-l="en">EN</button><button type="button" data-l="it">IT</button>
+    </div>
+  </div>
+  <div id="page"></div>
+  <div class="spons"><span id="spLabel"></span>
+    <div><img src="sponsors/planet-auto-hub.png" alt="Planet Auto Hub"><img src="sponsors/nioro-farms.png" alt="Nioro Farms"><img src="sponsors/jollof-ventures.png" alt="Jollof Ventures"></div>
+  </div>
+  <footer>© 2026 Nioro Resources LLC</footer>
+</div>
+<script>
+(function(){
+"use strict";
+var TXT={
+fr:{
+  title:"Wuré — Guide du joueur", back:"Jouer", spons:"Avec le soutien de", play:"Lancer une partie",
+  sub:"Le jeu de graines du Sénégal et de Gambie. Apprenez les règles en cinq minutes, puis battez vos amis.",
+  chips:["2 joueurs","12 cases","48 graines","25 pour gagner"],
+  toc:["Le plateau","Semer","Capturer","Cas spéciaux","Gagner","Conseils","En ligne"],
+  you:"Vous", opp:"Adversaire", dir:"sens inverse des aiguilles d'une montre",
+  s1:["Le plateau","Douze cases, six devant chaque joueur, et quatre graines dans chacune : 48 graines au total. Vos cases sont la rangée du bas, celles de l'adversaire la rangée du haut. Le jeu tourne toujours dans le sens inverse des aiguilles d'une montre : vers la droite sur votre rangée, vers la gauche sur la sienne.","Position de départ. Les flèches montrent le sens du jeu."],
+  s2:["Semer","À votre tour, choisissez l'une de vos cases qui contient des graines. Prenez-les toutes, puis déposez-les une par une dans les cases suivantes, en commençant par celle juste après.","Exemple : la case 3 (4 graines) sème dans les quatre cases suivantes. Elle est vide après le coup.","Vous ne pouvez jamais jouer une case de l'adversaire ni une case vide.","Avec 12 graines ou plus, vous faites le tour complet. La case de départ est sautée à chaque tour : elle reste toujours vide à la fin du coup.","Une case de 12 graines : chaque autre case reçoit une graine, puis la douzième saute la case de départ et tombe dans la case suivante, qui en reçoit deux.","Avant : vous choisissez la case 3.","Votre rangée est vide : vous passez votre tour."],
+  s3:["Capturer","Regardez où tombe votre dernière graine. Si cette case, de n'importe quel camp, contient alors exactement 2, 4 ou 6 graines, vous les prenez toutes. Seule cette case est capturée, jamais les cases d'avant.","Les nombres qui capturent :","Exemple : la case 4 (3 graines) sème dans trois cases. La dernière tombe dans une case de l'adversaire qui avait 1 graine : elle en a maintenant 2, vous gagnez 2 points.","Vous pouvez aussi capturer dans votre propre rangée. Et si la dernière case contient 1, 3, 5 ou plus de 6 graines, rien n'est pris."],
+  s4:["Cas spéciaux","Plus de graines, plus de tour. Si votre rangée est vide, vous passez votre tour. Le jeu continue jusqu'à ce que l'adversaire sème des graines chez vous.","Aucun coup possible pour aucun joueur, ou 80 coups de suite sans capture : la partie s'arrête. Chacun ajoute à son score les graines qui restent sur sa propre rangée.","Les cases se jouent de façon libre : il n'y a pas d'obligation de capturer."],
+  s5:["Gagner","Le premier joueur à capturer 25 graines gagne la partie. Si les deux joueurs arrivent à 24 – 24, c'est match nul.","Premier à 25","Match nul 24–24","Fin par blocage","Pour 25 graines sur 48, il faut capturer un peu plus de la moitié du jeu : chaque capture compte."],
+  s6:["Conseils","Gardez des graines sur votre rangée : une rangée vide vous fait passer votre tour et laisse l'adversaire jouer deux fois.","Comptez avant de semer : où tombera votre dernière graine, et combien y aura-t-il dans cette case ?","Méfiez-vous des cases à 1, 3 ou 5 graines chez vous : l'adversaire peut les faire passer à 2, 4 ou 6 et les prendre.","Un gros tas qui fait le tour peut surprendre l'adversaire, mais il vide votre case de départ.","Contre l'ordinateur, commencez par le niveau Facile, puis Moyen et Difficile."],
+  s7:["Jouer en ligne","Connectez-vous, puis créez une partie : le jeu vous donne un code de six caractères. Votre ami saisit ce code pour vous rejoindre. Vous pouvez discuter avec des messages et des emojis pendant la partie.","Si une personne quitte la partie, l'autre en est informée. Si votre téléphone se met en veille, rouvrez simplement le jeu : la partie reprend là où elle s'était arrêtée."]
+},
+en:{
+  title:"Wuré — Player's guide", back:"Play", spons:"Sponsored by", play:"Start a game",
+  sub:"The seed game of Senegal and The Gambia. Learn the rules in five minutes, then beat your friends.",
+  chips:["2 players","12 pits","48 seeds","25 to win"],
+  toc:["The board","Sowing","Capturing","Special cases","Winning","Tips","Online"],
+  you:"You", opp:"Opponent", dir:"counter-clockwise",
+  s1:["The board","Twelve pits, six in front of each player, and four seeds in every pit: 48 seeds in all. Your pits are the bottom row, your opponent's the top row. Play always runs counter-clockwise: to the right along your row, to the left along theirs.","Starting position. The arrows show the direction of play."],
+  s2:["Sowing","On your turn, choose one of your pits that holds seeds. Pick up all of them, then drop them one by one into the following pits, starting with the very next one.","Example: pit 3 (4 seeds) sows into the next four pits. It is empty afterwards.","You can never play from an opponent's pit or from an empty pit.","With 12 seeds or more you go all the way round. The starting pit is skipped on every lap, so it always ends the move empty.","A pit of 12 seeds: every other pit gets one seed, then the twelfth skips the starting pit and lands in the next one, which receives two.","Before: you pick pit 3.","Your row is empty: you miss your turn."],
+  s3:["Capturing","Look at where your last seed lands. If that pit, on either side, now holds exactly 2, 4 or 6 seeds, you take all of them. Only that one pit is captured, never the pits before it.","The numbers that capture:","Example: pit 4 (3 seeds) sows into three pits. The last one lands in an opponent's pit that held 1 seed: it now has 2, so you score 2.","You can capture on your own row too. If the last pit holds 1, 3, 5 or more than 6 seeds, nothing is taken."],
+  s4:["Special cases","No seeds, no turn. If your row is empty you miss your turn. Play carries on until the opponent sows seeds onto your row.","If neither player can move, or 80 moves in a row pass without a capture, the game ends. Each player adds the seeds left on their own row to their score.","There is no obligation to capture: you are free to play any pit."],
+  s5:["Winning","The first player to capture 25 seeds wins. If both players reach 24 – 24 it is a draw.","First to 25","Draw 24–24","Ends by block","25 of 48 seeds is just over half of the game, so every capture counts."],
+  s6:["Tips","Keep seeds on your row: an empty row makes you miss a turn and lets your opponent play twice.","Count before you sow: where will your last seed land, and how many seeds will be in that pit?","Beware of your pits holding 1, 3 or 5 seeds: your opponent can turn them into 2, 4 or 6 and take them.","A big pile that goes all the way round can surprise your opponent, but it empties your starting pit.","Against the computer, start on Easy, then try Medium and Hard."],
+  s7:["Playing online","Sign in, then create a game: you get a six-character code. Your friend enters the code to join you. You can chat with messages and emojis during the game.","If one player leaves, the other is told. If your phone goes to sleep, just reopen the game: it picks up where it stopped."]
+},
+it:{
+  title:"Wuré — Guida del giocatore", back:"Gioca", spons:"Con il sostegno di", play:"Inizia una partita",
+  sub:"Il gioco dei semi del Senegal e del Gambia. Impara le regole in cinque minuti, poi batti i tuoi amici.",
+  chips:["2 giocatori","12 buche","48 semi","25 per vincere"],
+  toc:["Il tavolo","Seminare","Catturare","Casi speciali","Vincere","Consigli","Online"],
+  you:"Tu", opp:"Avversario", dir:"senso antiorario",
+  s1:["Il tavolo","Dodici buche, sei davanti a ogni giocatore, con quattro semi in ciascuna: 48 semi in tutto. Le tue buche sono la fila in basso, quelle dell'avversario la fila in alto. Si gioca sempre in senso antiorario: verso destra lungo la tua fila, verso sinistra lungo la sua.","Posizione iniziale. Le frecce mostrano il senso di gioco."],
+  s2:["Seminare","Al tuo turno scegli una delle tue buche che contiene semi. Prendili tutti e lasciali uno a uno nelle buche successive, partendo da quella subito dopo.","Esempio: la buca 3 (4 semi) semina nelle quattro buche seguenti. Dopo la mossa è vuota.","Non puoi mai giocare da una buca dell'avversario né da una buca vuota.","Con 12 semi o più fai il giro completo. La buca di partenza viene saltata a ogni giro, quindi a fine mossa resta sempre vuota.","Una buca da 12 semi: ogni altra buca riceve un seme, poi il dodicesimo salta la buca di partenza e cade in quella successiva, che ne riceve due.","Prima: scegli la buca 3.","La tua fila è vuota: salti il turno."],
+  s3:["Catturare","Guarda dove cade il tuo ultimo seme. Se quella buca, di qualsiasi parte, contiene ora esattamente 2, 4 o 6 semi, li prendi tutti. Si cattura solo quella buca, mai quelle prima.","I numeri che catturano:","Esempio: la buca 4 (3 semi) semina in tre buche. L'ultimo cade in una buca dell'avversario che aveva 1 seme: ora ne ha 2, quindi segni 2.","Puoi catturare anche sulla tua fila. Se l'ultima buca contiene 1, 3, 5 o più di 6 semi, non si prende nulla."],
+  s4:["Casi speciali","Niente semi, niente turno. Se la tua fila è vuota salti il turno. Si continua finché l'avversario non semina dei semi sulla tua fila.","Se nessuno dei due può muovere, o passano 80 mosse di fila senza catture, la partita finisce. Ognuno aggiunge al proprio punteggio i semi rimasti sulla propria fila.","Non c'è obbligo di catturare: puoi giocare qualsiasi buca."],
+  s5:["Vincere","Il primo giocatore a catturare 25 semi vince. Se entrambi arrivano a 24 – 24 è pareggio.","Primo a 25","Pareggio 24–24","Fine per blocco","25 semi su 48 sono poco più della metà: ogni cattura conta."],
+  s6:["Consigli","Tieni dei semi sulla tua fila: una fila vuota ti fa saltare il turno e lascia giocare due volte l'avversario.","Conta prima di seminare: dove cadrà l'ultimo seme e quanti semi ci saranno in quella buca?","Attento alle tue buche con 1, 3 o 5 semi: l'avversario può portarle a 2, 4 o 6 e prenderle.","Un grosso mucchio che fa il giro può sorprendere l'avversario, ma svuota la tua buca di partenza.","Contro il computer, comincia da Facile, poi prova Medio e Difficile."],
+  s7:["Giocare online","Accedi e crea una partita: ricevi un codice di sei caratteri. Il tuo amico inserisce il codice per unirsi a te. Durante la partita puoi chattare con messaggi ed emoji.","Se un giocatore esce, l'altro viene avvisato. Se il telefono va in stand-by, riapri il gioco: la partita riprende da dove si era fermata."]
+}};
+
+/* ---------- board drawing: pits 0-5 are yours (left to right), 6-11 the opponent's (right to left) ---------- */
+function pos(i){ return i<6 ? {x:70+i*92, y:178} : {x:70+(11-i)*92, y:82}; }
+function dots(cx,cy,n){
+  var o="",pts=[[0,0],[-9,-7],[9,-7],[-9,7],[9,7],[0,-14],[0,14],[-17,0],[17,0],[-14,-14],[14,-14],[14,14]];
+  for(var k=0;k<Math.min(n,12);k++) o+='<circle cx="'+(cx+pts[k][0]*0.9)+'" cy="'+(cy+pts[k][1]*0.9)+'" r="4.4" fill="#e8e2cf" stroke="#8d927f" stroke-width="1"/>';
+  return o;
+}
+// o: {b:[12 counts], start:i, path:[i..], cap:i, tag:{i:"+1"}, you, opp, dir}
+function board(o){
+  var s='<svg viewBox="0 0 600 260" role="img" aria-label="board"><defs><linearGradient id="wd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c78750"/><stop offset="1" stop-color="#8a5229"/></linearGradient></defs>';
+  s+='<rect x="8" y="30" width="584" height="200" rx="26" fill="url(#wd)" stroke="#4c2a12" stroke-width="3"/>';
+  s+='<text x="300" y="20" text-anchor="middle" fill="#a8b0cc" font-size="14" font-weight="700">'+o.opp+'</text>';
+  s+='<text x="300" y="252" text-anchor="middle" fill="#f4ecdb" font-size="14" font-weight="700">'+o.you+'</text>';
+  for(var i=0;i<12;i++){
+    var p=pos(i),ring="",fill="#3d2110",n=o.b[i];
+    if(o.path&&o.path.indexOf(i)>=0){ ring='<circle cx="'+p.x+'" cy="'+p.y+'" r="40" fill="none" stroke="#2ec4b6" stroke-width="5"/>'; }
+    if(i===o.start){ ring='<circle cx="'+p.x+'" cy="'+p.y+'" r="40" fill="none" stroke="#f3c333" stroke-width="5" stroke-dasharray="7 5"/>'; }
+    if(i===o.cap){ ring='<circle cx="'+p.x+'" cy="'+p.y+'" r="40" fill="none" stroke="#ff7a59" stroke-width="6"/>'; fill="#5a2a14"; }
+    s+=ring+'<circle cx="'+p.x+'" cy="'+p.y+'" r="34" fill="'+fill+'" stroke="#2a1508" stroke-width="2"/>'+dots(p.x,p.y,n);
+    s+='<text x="'+(p.x-24)+'" y="'+(p.y-27)+'" font-size="12" font-weight="700" fill="#e9c9a3">'+(i+1)+'</text>';
+    s+='<text x="'+(p.x+27)+'" y="'+(p.y+36)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#ffe9b0">'+n+'</text>';
+    if(o.tag&&o.tag[i]) s+='<g><rect x="'+(p.x-19)+'" y="'+(p.y-62)+'" width="38" height="22" rx="11" fill="'+(o.tag[i].c||'#2ec4b6')+'"/><text x="'+p.x+'" y="'+(p.y-47)+'" text-anchor="middle" font-size="14" font-weight="800" fill="#10142a">'+o.tag[i].t+'</text></g>';
+  }
+  if(o.dir){
+    s+='<g fill="none" stroke="#f3c333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M200 128 H400"/><path d="M388 119 L400 128 L388 137"/></g>';
+    s+='<g fill="none" stroke="#f3c333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M400 132 H200" transform="translate(0 0)" opacity="0"/></g>';
+    s+='<text x="300" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#ffe9b0">'+o.dir+'</text>';
+  }
+  return s+'</svg>';
+}
+function arrowsBoard(L,b){ // start position with arrows on both rows
+  var s=board({b:b,you:L.you,opp:L.opp});
+  var arr='<g fill="none" stroke="#f3c333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">'+
+    '<path d="M60 222 H540"/><path d="M526 212 L540 222 L526 232"/>'+
+    '<path d="M540 38 H60" /><path d="M74 28 L60 38 L74 48"/></g>';
+  return s.replace('</svg>',arr+'</svg>');
+}
+function fig(svg,cap){ return '<figure class="fig" style="margin:14px 0 6px">'+svg+'<figcaption>'+cap+'</figcaption></figure>'; }
+
+function render(l){
+  var L=TXT[l]; document.documentElement.lang=l; document.title=L.title;
+  var start=[4,4,4,4,4,4,4,4,4,4,4,4], h="";
+  h+='<div class="hero"><h1>Wuré</h1><p>'+L.sub+'</p><div class="chips">'+L.chips.map(function(c){return '<span class="chip">'+c+'</span>'}).join("")+'</div></div>';
+  h+='<nav class="toc" aria-label="Menu">'+L.toc.map(function(t,i){return '<a href="#s'+(i+1)+'">'+(i+1)+' · '+t+'</a>'}).join("")+'</nav>';
+  // 1 board
+  h+='<section class="s1" id="s1"><h2><span class="n">1</span>'+L.s1[0]+'</h2><p>'+L.s1[1]+'</p>'+fig(arrowsBoard(L,start),L.s1[2])+'</section>';
+  // 2 sowing: pit 3 (index 2) has 4 -> 3,4,5,6 get +1
+  var sow=start.slice(); sow[2]=4;
+  var after=sow.slice(); after[2]=0; for(var i=3;i<=6;i++) after[i]++;
+  var tg={}; for(i=3;i<=6;i++) tg[i]={t:"+1"};
+  var a2=after.slice();
+  h+='<section class="s2" id="s2"><h2><span class="n">2</span>'+L.s2[0]+'</h2><p>'+L.s2[1]+'</p>'+
+    fig(board({b:sow,start:2,path:[3,4,5,6],you:L.you,opp:L.opp,tag:tg}),L.s2[6])+
+    fig(board({b:a2,you:L.you,opp:L.opp}),L.s2[2])+
+    '<div class="call">'+L.s2[3]+'</div><p>'+L.s2[4]+'</p>';
+  // big lap: pit 1 (index 0) with 12 seeds
+  var big=[12,4,4,4,4,4,4,4,4,4,4,4], bigAfter=[0,6,5,5,5,5,5,5,5,5,5,5], tg2={};
+  for(i=1;i<=11;i++) tg2[i]={t:i===1?"+2":"+1",c:i===1?"#ff7a59":"#2ec4b6"};
+  h+=fig(board({b:big,start:0,path:[1,2,3,4,5,6,7,8,9,10,11],you:L.you,opp:L.opp,tag:tg2}),L.s2[5])+'</section>';
+  // 3 capture: pit 5 (index 4) has 3 -> 5,6,7 ; pit 7 (index 6) had 1 -> 2 captured
+  var cb=start.slice(); cb[3]=3; cb[6]=1;
+  var tg3={5:{t:"+1"},6:{t:"+1"},7:{t:"+1"}}; tg3[6]={t:"2",c:"#ff7a59"};
+  var caps=cb.slice(); caps[4]=0;
+  h+='<section class="s3" id="s3"><h2><span class="n">3</span>'+L.s3[0]+'</h2><p>'+L.s3[1]+'</p><p><b>'+L.s3[2]+'</b></p><div class="vals"><i>2</i><i>4</i><i>6</i></div>'+
+    fig(board({b:cb,start:3,path:[4,5],cap:6,tag:{4:{t:"+1"},5:{t:"+1"},6:{t:"1→2",c:"#ff7a59"}},you:L.you,opp:L.opp}),L.s3[3])+
+    '<div class="call">'+L.s3[4]+'</div></section>';
+  // 4 special
+  h+='<section class="s4" id="s4"><h2><span class="n">4</span>'+L.s4[0]+'</h2><p>'+L.s4[1]+'</p>'+
+    fig(board({b:[0,0,0,0,0,0,5,3,6,2,4,3],you:L.you,opp:L.opp}),L.s2[7])+
+    '<p>'+L.s4[2]+'</p><div class="call">'+L.s4[3]+'</div></section>';
+  // 5 winning
+  h+='<section class="s5" id="s5"><h2><span class="n">5</span>'+L.s5[0]+'</h2><p>'+L.s5[1]+'</p><div class="cards"><div class="card a"><b>25</b><span>'+L.s5[2]+'</span></div><div class="card b"><b>24 = 24</b><span>'+L.s5[3]+'</span></div><div class="card c"><b>80</b><span>'+L.s5[4]+'</span></div></div><p>'+L.s5[5]+'</p></section>';
+  // 6 tips
+  h+='<section class="s6" id="s6"><h2><span class="n">6</span>'+L.s6[0]+'</h2><ul class="tips">'+L.s6.slice(1).map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul></section>';
+  // 7 online
+  h+='<section class="s7" id="s7"><h2><span class="n">7</span>'+L.s7[0]+'</h2><p>'+L.s7[1]+'</p><p>'+L.s7[2]+'</p></section>';
+  h+='<a class="cta" href="index.html">'+L.play+' →</a>';
+  document.getElementById("page").innerHTML=h;
+  document.getElementById("back").textContent="← "+L.back;
+  document.getElementById("spLabel").textContent=L.spons;
+  Array.prototype.forEach.call(document.querySelectorAll(".langs button"),function(b){b.setAttribute("aria-pressed",b.dataset.l===l?"true":"false")});
+}
+function pick(){
+  var m=/[?&]lang=(fr|en|it)/.exec(location.search); if(m) return m[1];
+  try{ var d=JSON.parse(localStorage.getItem("wure.settings.v1")||"null"); if(d&&/^(fr|en|it)$/.test(d.lang)) return d.lang; }catch(e){}
+  var n=(navigator.language||"fr").slice(0,2); return /^(fr|en|it)$/.test(n)?n:"fr";
+}
+Array.prototype.forEach.call(document.querySelectorAll(".langs button"),function(b){
+  b.addEventListener("click",function(){ render(b.dataset.l); try{ history.replaceState(null,"","?lang="+b.dataset.l); }catch(e){} });
+});
+render(pick());
+})();
+</script>
+</body>
+</html>

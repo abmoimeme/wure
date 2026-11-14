@@ -366,7 +366,7 @@ dialog h2{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 1
 <dialog id="dlgRules">
   <h2 id="rulesTitle"></h2>
   <ol class="rules" id="rulesList"></ol>
-  <p class="guide" id="guideRow" hidden><a id="guideLink" target="_blank" rel="noopener"></a></p>
+  <p class="guide" id="guideRow" hidden><a id="guideLink"></a></p>
   <div class="row"><button type="button" class="cta" id="rulesClose"></button></div>
 </dialog>
 
@@ -671,8 +671,8 @@ function renderText(){
   document.getElementById("rulesClose").textContent=t("close");
   var gu=(window.WURE_CONFIG&&window.WURE_CONFIG.guideUrl)||{}, own=gu[S.lang], url=own||gu.fr||"";
   var gr=document.getElementById("guideRow"), gl=document.getElementById("guideLink");
-  gr.hidden=!/^https:\/\//.test(url);
-  gl.href=url; gl.textContent=t("guide")+(own||S.lang==="fr"?"":" (FR)");
+  gr.hidden=!url;
+  gl.href=url; gl.textContent=t("guide");
 }
 var toastTimer=null;
 function toast(msg){
