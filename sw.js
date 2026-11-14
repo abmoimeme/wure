@@ -1,5 +1,5 @@
 // Network first, so testers always get the newest version; cached copy only when offline.
-var CACHE = "wure-v3";
+var CACHE = "wure-v4";
 var FILES = ["./", "index.html", "manifest.webmanifest", "config.js", "online.js", "icons/icon-192.png", "icons/icon-512.png",
   "sponsors/planet-auto-hub.png", "sponsors/nioro-farms.png", "sponsors/jollof-ventures.png"];
 self.addEventListener("install", function (e) {

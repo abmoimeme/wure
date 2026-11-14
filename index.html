@@ -382,12 +382,12 @@ var T = {
     inHand:function(n){return n+" in hand";},
     emptyPit:"That pit is empty.",
     notYours:"That pit is on the other side.",
-    mustFeed:"Your opponent has no seeds. You must play a pit that gives them some.",
-    slam:"That would take every seed on the other side, so nothing is captured.",
+    pass:function(n){return n+" has no seeds and misses a turn.";},
     took:function(n,c){return n+" captures "+c+".";},
     wins:function(n,a,b){return n+" wins "+a+" to "+b+".";},
     draw:"Draw, 24 each.",
-    noFeed:"No move can feed the other side. Each player keeps the seeds on their row.",
+    noMoves:"Nobody can move. Each player keeps the seeds on their row.",
+    cycle:"No capture for a long time. Each player keeps the seeds on their row.",
     again:"Play again", endCount:"Stop and count",
     endCountDone:"Game stopped. Each player keeps the seeds on their row.",
     setup:"New game", mode:"Game", vsCpu:"Against the computer", two:"Two players, one phone",
@@ -398,9 +398,9 @@ var T = {
     rulesList:[
       "<b>The board.</b> 12 pits, 6 on each side, with 4 seeds in every pit. Your pits are the row in front of you.",
       "<b>Sowing.</b> On your turn, pick up all the seeds from one of your non-empty pits and drop them one by one in the next pits, going counter-clockwise. With 12 seeds or more you go all the way round, skipping the starting pit on every lap.",
-      "<b>Capturing.</b> If your last seed lands in a pit on the other side and makes it 2 or 3, you take those seeds. Then look at the pit just before it: if it is also on the other side with 2 or 3, take it too. Keep going back this way, and stop when you reach your own side or a pit that doesn't contain 2 or 3 seeds.",
-      "<b>Feed your opponent.</b> If the other side is empty, you must play a move that gives it seeds. A move that would capture every seed on the other side captures nothing.",
-      "<b>Winning.</b> The first player to capture 25 seeds wins. 24 each is a draw. If the other side is empty and you cannot give it any seeds, the game ends. Each player adds the seeds left on their row to their score."
+      "<b>Capturing.</b> If your last seed lands in a pit, on either side, and that pit now holds exactly 2, 4 or 6 seeds, you take those seeds. Only that one pit is captured.",
+      "<b>No seeds, no turn.</b> If your row is empty, you miss your turn until the other player sows seeds onto it.",
+      "<b>Winning.</b> The first player to capture 25 seeds wins. 24 each is a draw. If 80 moves in a row pass without a capture, the game ends and each player adds the seeds left on their row to their score."
     ]
   },
   fr:{
@@ -413,12 +413,12 @@ var T = {
     inHand:function(n){return n+" en main";},
     emptyPit:"Cette case est vide.",
     notYours:"Cette case est dans l'autre camp.",
-    mustFeed:"Votre adversaire n'a plus de graines. Vous devez jouer une case qui lui en donne.",
-    slam:"Ce coup prendrait toutes les graines du camp adverse, donc rien n'est capturé.",
+    pass:function(n){return n+" n'a plus de graines et passe son tour.";},
     took:function(n,c){return n+" capture "+c+".";},
     wins:function(n,a,b){return n+" gagne "+a+" à "+b+".";},
     draw:"Match nul, 24 partout.",
-    noFeed:"Aucun coup ne peut nourrir l'autre camp. Chacun garde les graines de sa rangée.",
+    noMoves:"Plus personne ne peut jouer. Chacun garde les graines de sa rangée.",
+    cycle:"Aucune capture depuis longtemps. Chacun garde les graines de sa rangée.",
     again:"Rejouer", endCount:"Arrêter et compter",
     endCountDone:"Partie arrêtée. Chacun garde les graines de sa rangée.",
     setup:"Nouvelle partie", mode:"Partie", vsCpu:"Contre l'ordinateur", two:"Deux joueurs, un téléphone",
@@ -429,9 +429,9 @@ var T = {
     rulesList:[
       "<b>Le plateau.</b> 12 cases, 6 par camp, avec 4 graines dans chaque case. Vos cases sont la rangée devant vous.",
       "<b>Semer.</b> À votre tour, prenez toutes les graines d'une de vos cases non vides et déposez-les une par une dans les cases suivantes, dans le sens inverse des aiguilles d'une montre. Avec 12 graines ou plus, vous faites le tour complet en sautant la case de départ à chaque tour.",
-      "<b>Capturer.</b> Si votre dernière graine tombe dans une case adverse qui contient alors 2 ou 3 graines, vous les prenez. Regardez ensuite la case précédente : si elle est aussi dans le camp adverse avec 2 ou 3 graines, prenez-la aussi. Continuez à reculer ainsi, et arrêtez-vous quand vous atteignez votre propre camp ou une case qui ne contient pas 2 ou 3 graines.",
-      "<b>Nourrir l'adversaire.</b> Si le camp adverse est vide, vous devez jouer un coup qui lui donne des graines. Un coup qui prendrait toutes les graines adverses ne capture rien.",
-      "<b>Gagner.</b> Le premier joueur à capturer 25 graines gagne. 24 partout, c'est match nul. Si le camp adverse est vide et que vous ne pouvez pas lui donner de graines, la partie se termine. Chaque joueur ajoute à son score les graines restantes sur sa rangée."
+      "<b>Capturer.</b> Si votre dernière graine tombe dans une case, de n'importe quel camp, et que cette case contient alors exactement 2, 4 ou 6 graines, vous les prenez. Seule cette case est capturée.",
+      "<b>Plus de graines, plus de tour.</b> Si votre rangée est vide, vous passez votre tour jusqu'à ce que l'autre joueur y sème des graines.",
+      "<b>Gagner.</b> Le premier joueur à capturer 25 graines gagne. 24 partout, c'est match nul. Si 80 coups de suite passent sans capture, la partie s'arrête et chacun ajoute à son score les graines restant sur sa rangée."
     ]
   },
   it:{
@@ -444,12 +444,12 @@ var T = {
     inHand:function(n){return n+" in mano";},
     emptyPit:"Questa buca è vuota.",
     notYours:"Questa buca è dall'altra parte.",
-    mustFeed:"L'avversario non ha più semi. Devi giocare una buca che gliene dia.",
-    slam:"Questa mossa prenderebbe tutti i semi dell'altra parte, quindi non si cattura nulla.",
+    pass:function(n){return n+" non ha più semi e salta il turno.";},
     took:function(n,c){return n+" cattura "+c+".";},
     wins:function(n,a,b){return n+" vince "+a+" a "+b+".";},
     draw:"Pareggio, 24 a testa.",
-    noFeed:"Nessuna mossa può dare semi all'altra parte. Ognuno tiene i semi della propria fila.",
+    noMoves:"Nessuno può muovere. Ognuno tiene i semi della propria fila.",
+    cycle:"Nessuna cattura da molto tempo. Ognuno tiene i semi della propria fila.",
     again:"Gioca ancora", endCount:"Fermati e conta",
     endCountDone:"Partita fermata. Ognuno tiene i semi della propria fila.",
     setup:"Nuova partita", mode:"Partita", vsCpu:"Contro il computer", two:"Due giocatori, un telefono",
@@ -460,9 +460,9 @@ var T = {
     rulesList:[
       "<b>Il tavolo.</b> 12 buche, 6 per lato, con 4 semi in ogni buca. Le tue buche sono la fila davanti a te.",
       "<b>Seminare.</b> Al tuo turno prendi tutti i semi di una delle tue buche non vuote e li lasci uno a uno nelle buche successive, in senso antiorario. Con 12 semi o più fai il giro completo, saltando la buca di partenza a ogni giro.",
-      "<b>Catturare.</b> Se il tuo ultimo seme cade in una buca dell'altra parte e la porta a 2 o 3 semi, li prendi. Poi guarda la buca precedente: se è anch'essa dell'altra parte con 2 o 3 semi, prendila. Continua a ritroso così, e fermati quando arrivi alla tua parte o a una buca che non contiene 2 o 3 semi.",
-      "<b>Dare da mangiare.</b> Se l'altra parte è vuota, devi giocare una mossa che le dia dei semi. Una mossa che prenderebbe tutti i semi avversari non cattura nulla.",
-      "<b>Vincere.</b> Il primo giocatore a catturare 25 semi vince. 24 a testa è pareggio. Se l'altra parte è vuota e non puoi darle nessun seme, la partita finisce. Ogni giocatore aggiunge al proprio punteggio i semi rimasti sulla propria fila."
+      "<b>Catturare.</b> Se il tuo ultimo seme cade in una buca, di qualsiasi parte, e quella buca contiene ora esattamente 2, 4 o 6 semi, li prendi. Si cattura solo quella buca.",
+      "<b>Niente semi, niente turno.</b> Se la tua fila è vuota, salti il turno finché l'altro giocatore non vi semina dei semi.",
+      "<b>Vincere.</b> Il primo giocatore a catturare 25 semi vince. 24 a testa è pareggio. Se passano 80 mosse di fila senza catture, la partita finisce e ognuno aggiunge al proprio punteggio i semi rimasti sulla propria fila."
     ]
   }
 };
@@ -484,28 +484,26 @@ function nameOf(p){
 /* ---------- Rules engine ---------- */
 function side(i){return i<6?0:1;}
 function sideSum(b,p){var s=0;for(var i=p*6;i<p*6+6;i++)s+=b[i];return s;}
+var QUIET_LIMIT=80; /* moves in a row without a capture before the game is counted */
+function isCapture(n){ return n===2||n===4||n===6; }
 function simulate(b,p,i){
   var nb=b.slice(), n=nb[i], j=i, steps=[];
   nb[i]=0;
   while(n>0){ j=(j+1)%12; if(j===i) continue; nb[j]++; n--; steps.push(j); }
-  var cap=[], k=j;
-  while(side(k)!==p && (nb[k]===2||nb[k]===3)){ cap.push(k); k=(k+11)%12; }
-  var captured=0, slam=false;
-  if(cap.length){
-    var tot=0; for(var c=0;c<cap.length;c++) tot+=nb[cap[c]];
-    if(tot===sideSum(nb,1-p)){ slam=true; cap=[]; }
-    else { captured=tot; for(c=0;c<cap.length;c++) nb[cap[c]]=0; }
-  }
-  return {board:nb, captured:captured, steps:steps, cap:cap, slam:slam};
+  var cap=[], captured=0;
+  if(isCapture(nb[j])){ cap=[j]; captured=nb[j]; nb[j]=0; }
+  return {board:nb, captured:captured, steps:steps, cap:cap, slam:false};
 }
 function legalMoves(b,p){
-  var out=[], mustFeed=sideSum(b,1-p)===0;
-  for(var i=p*6;i<p*6+6;i++){
-    if(b[i]===0) continue;
-    if(mustFeed && sideSum(simulate(b,p,i).board,1-p)===0) continue;
-    out.push(i);
-  }
+  var out=[];
+  for(var i=p*6;i<p*6+6;i++){ if(b[i]>0) out.push(i); }
   return out;
+}
+/* Who plays next: the other player, unless their row is empty (they miss a turn). -1 = nobody can play. */
+function nextTurn(b,p){
+  if(sideSum(b,1-p)>0) return 1-p;
+  if(sideSum(b,p)>0) return p;
+  return -1;
 }
 
 /* ---------- Computer player ---------- */
@@ -521,7 +519,8 @@ function search(b,sc,p,depth,alpha,beta,me){
   for(var m=0;m<moves.length;m++){
     var r=simulate(b,p,moves[m]);
     var ns=[sc[0],sc[1]]; ns[p]+=r.captured;
-    var v=search(r.board,ns,1-p,depth-1,alpha,beta,me);
+    var np=nextTurn(r.board,p);
+    var v = np<0 ? (ns[me]-ns[1-me])*10 : search(r.board,ns,np,depth-1,alpha,beta,me);
     if(p===me){ if(v>best)best=v; if(best>alpha)alpha=best; }
     else { if(v<best)best=v; if(best<beta)beta=best; }
     if(alpha>=beta) break;
@@ -536,7 +535,8 @@ function cpuChoose(){
   for(var m=0;m<moves.length;m++){
     var r=simulate(S.board,1,moves[m]);
     var ns=[S.score[0],S.score[1]+r.captured];
-    var v=search(r.board,ns,0,depth-1,-1e9,1e9,1);
+    var np=nextTurn(r.board,1);
+    var v = np<0 ? (ns[1]-ns[0])*10 : search(r.board,ns,np,depth-1,-1e9,1e9,1);
     if(v>best){best=v;picks=[moves[m]];} else if(v===best) picks.push(moves[m]);
   }
   return picks[Math.floor(Math.random()*picks.length)];
@@ -685,7 +685,6 @@ function onPit(i){
   if(S.online && S.turn!==S.online.seat){ toast(t("notYourTurn")); sndNo(); return; }
   if(side(i)!==S.turn){ toast(t("notYours")); sndNo(); return; }
   if(S.board[i]===0){ toast(t("emptyPit")); sndNo(); return; }
-  if(legalMoves(S.board,S.turn).indexOf(i)<0){ toast(t("mustFeed")); sndNo(); return; }
   if(S.online && window.WureOnline && !window.WureOnline.sendMove(i)) return;
   playMove(i);
 }
@@ -710,13 +709,14 @@ async function playMove(i){
     sim.cap.forEach(function(k){ pits[k].classList.remove("take"); });
     S.score[p]+=sim.captured; bump(p);
     toast(t("took")(nameOf(p),sim.captured));
-  } else if(sim.slam){
-    toast(t("slam"));
   }
   S.board=sim.board;
-  S.turn=1-p;
+  S.quiet = sim.captured ? 0 : (S.quiet||0)+1;
+  var nt=nextTurn(S.board,p);
+  S.turn = nt<0 ? 1-p : nt;
   busy=false;
   checkEnd();
+  if(!S.over && nt===p) toast(t("pass")(nameOf(1-p)));
   render();
   if(S.online && window.WureOnline) window.WureOnline.pump();
   if(!S.over) scheduleCpu();
@@ -738,7 +738,8 @@ function finishByCount(prefix){
 }
 function checkEnd(){
   if(S.score[0]>=25 || S.score[1]>=25 || (S.score[0]===24 && S.score[1]===24)){ setResult(""); return; }
-  if(!legalMoves(S.board,S.turn).length) finishByCount(t("noFeed"));
+  if(!legalMoves(S.board,S.turn).length){ finishByCount(t("noMoves")); return; }
+  if((S.quiet||0)>=QUIET_LIMIT) finishByCount(t("cycle"));
 }
 function scheduleCpu(){
   clearTimeout(cpuTimer);
@@ -751,7 +752,7 @@ function scheduleCpu(){
 }
 function newGame(){
   gameId++; busy=false; clearTimeout(cpuTimer);
-  S.board=[4,4,4,4,4,4,4,4,4,4,4,4]; S.score=[0,0]; S.turn=S.first; S.over=false; S.endMsg=""; S.from=-1;
+  S.board=[4,4,4,4,4,4,4,4,4,4,4,4]; S.score=[0,0]; S.turn=S.first; S.over=false; S.endMsg=""; S.from=-1; S.quiet=0;
   render(); scheduleCpu();
 }
 
@@ -820,14 +821,16 @@ window.WureGame={
   silentMove:function(i){
     if(S.over||S.board[i]<=0) return false;
     var p=S.turn, sim=simulate(S.board,p,i);
-    S.board=sim.board; S.score[p]+=sim.captured; S.turn=1-p; S.from=-1;
+    S.board=sim.board; S.score[p]+=sim.captured; S.from=-1;
+    S.quiet = sim.captured ? 0 : (S.quiet||0)+1;
+    var nt=nextTurn(S.board,p); S.turn = nt<0 ? 1-p : nt;
     checkEnd(); return true;
   },
   startOnline:function(info){
     if(!S.online) S.prevMode=S.mode;
     S.online={seat:info.seat,names:[info.names[0]||"",info.names[1]||""]}; S.mode="online";
     gameId++; busy=false; clearTimeout(cpuTimer);
-    S.board=[4,4,4,4,4,4,4,4,4,4,4,4]; S.score=[0,0]; S.turn=info.first; S.over=false; S.endMsg=""; S.from=-1;
+    S.board=[4,4,4,4,4,4,4,4,4,4,4,4]; S.score=[0,0]; S.turn=info.first; S.over=false; S.endMsg=""; S.from=-1; S.quiet=0;
     render();
   },
   setNames:function(n){ if(S.online){ S.online.names=[n[0]||"",n[1]||""]; render(); } },
